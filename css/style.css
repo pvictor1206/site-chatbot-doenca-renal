@@ -41,6 +41,21 @@ p {
     margin-bottom: 20px;
 }
 
+.chat-icon {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.chat-icon img {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
 .chat-button {
     background-color: #337AB7;
     color: white;
@@ -49,20 +64,9 @@ p {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    margin-top: 10px;
 }
 
 .chat-button:hover {
     background-color: #285E8E;
-}
-
-.chat-icon {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-}
-
-.chat-icon img {
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
 }
