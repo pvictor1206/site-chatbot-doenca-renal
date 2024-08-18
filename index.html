@@ -32,14 +32,12 @@
             <span class="chat-subtitle">Chatbot</span>
             <button class="chat-close" onclick="toggleChat()">x</button>
         </div>
-        <div class="chat-body">
+        <div class="chat-body" id="chat-body">
             <div class="chat-message">
-                Oi, me chamo Lina e sou sua assistente virtual. 😊
-                Fui criada por profissionais da saúde e estou pronta para te ajudar na administração de insulina.
-                Para começarmos, vou precisar coletar algumas informações.
+                Oi, me chamo Lina e sou sua assistente virtual. 😊 Fui criada por profissionais da saúde e estou pronta para te ajudar na administração de insulina. Para começarmos, vou precisar coletar algumas informações.
             </div>
-            <input type="text" placeholder="Nome completo:" class="chat-input">
         </div>
+        <input type="text" id="chat-input" placeholder="Digite sua mensagem..." class="chat-input" onkeydown="handleUserInput(event)">
     </div>
 
     <script src="js/script.js"></script>

@@ -121,6 +121,8 @@ p {
     display: flex;
     flex-direction: column;
     gap: 10px; /* Espaçamento entre as mensagens */
+    height: 200px;
+    overflow-y: auto;
 }
 
 .chat-message {
@@ -130,6 +132,12 @@ p {
     border-radius: 10px;
     align-self: flex-start;
     max-width: 100%;
+}
+
+.chat-message.user {
+    background-color: #f1f1f1;
+    color: #000;
+    align-self: flex-end;
 }
 
 .chat-input {
