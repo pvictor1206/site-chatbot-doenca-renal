@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Nunito', sans-serif;
     margin: 0;
     padding: 0;
     background: linear-gradient(to right, #7F7FD5, #86A8E7, #91EAE4); /* Fundo gradiente ajustado */
@@ -124,6 +124,7 @@ p {
 
 .footer-content {
     flex: 1;
+    text-align: center;
 }
 
 .footer h3 {
@@ -137,13 +138,13 @@ p {
 }
 
 .footer-logo {
-    flex: 0;
-    margin-left: 20px;
+    flex: 1;
+    margin-left: 100px; /* Aproxima a logo do texto */
 }
 
 .footer-logo img {
-    max-height: 60px; /* Tamanho máximo da logo */
-    width: auto;
+    max-height: 120px; /* Tamanho máximo da logo */
+
 }
 
 /* Estilos do ícone do chatbot */
