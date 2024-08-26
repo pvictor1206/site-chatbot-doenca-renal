@@ -47,6 +47,84 @@ p {
     margin-bottom: 20px;
 }
 
+/* Segunda seção */
+.new-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px;
+    background: linear-gradient(to right, #5DADE2, #3498DB); /* Fundo gradiente de outra tonalidade de azul */
+    color: #FFFFFF;
+}
+
+.new-section .content {
+    flex: 2;
+    padding-right: 50px;
+}
+
+.new-section .content h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.new-section .content p {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.new-section .image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.new-section .image img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Terceira seção */
+.third-section {
+    padding: 50px;
+    background-color: #FFFFFF; /* Fundo branco */
+    color: #000000;
+    text-align: center;
+}
+
+.third-section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.third-section p {
+    font-size: 18px;
+    line-height: 1.5;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Rodapé */
+.footer {
+    background-color: #00529B;
+    color: #FFFFFF;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer-content {
+    margin-bottom: 10px;
+}
+
+.footer h3 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* Estilos do ícone do chatbot */
 .chat-icon {
     position: fixed;
     right: 20px;
@@ -103,19 +181,20 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 150px;
-    height: 150px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.3); /* Fundo transparente */
     cursor: pointer;
 }
 
 .chat-icon-image {
-    width: 130px;
-    height: 160px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
 }
 
+/* Estilos do chat */
 .chat-window {
     position: fixed;
     right: 20px;
@@ -166,7 +245,7 @@ p {
     font-size: 12px;
 }
 
-.chat-close {
+.chat-minimize {
     background: none;
     border: none;
     color: white;
@@ -176,7 +255,7 @@ p {
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
-.chat-close:hover {
+.chat-minimize:hover {
     color: #ff4d4d;
     transform: scale(1.2);
 }
@@ -259,19 +338,4 @@ p {
 
 .expand-button:hover {
     transform: scale(1.1);
-}
-
-.chat-minimize {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 5px;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.chat-minimize:hover {
-    color: #ff4d4d;
-    transform: scale(1.2);
 }
