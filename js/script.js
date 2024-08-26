@@ -56,6 +56,20 @@ function processUserMessage(message) {
     }
 }
 
+function toggleExpandChat() {
+    const chatWindow = document.getElementById('chat-window');
+    chatWindow.classList.toggle('expanded');
+
+    const expandButtonIcon = document.querySelector('.expand-button i');
+    if (chatWindow.classList.contains('expanded')) {
+        expandButtonIcon.classList.remove('fa-expand');
+        expandButtonIcon.classList.add('fa-compress');
+    } else {
+        expandButtonIcon.classList.remove('fa-compress');
+        expandButtonIcon.classList.add('fa-expand');
+    }
+}
+
 function startRecording() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         console.error('getUserMedia not supported on your browser!');
@@ -115,8 +129,16 @@ async function transcribeAudio(audioBlob) {
             config: config,
         };
 
-        const [response] = await client.recognize(request);
-        const transcription = response.results
+        const response = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=YOUR_API_KEY', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(request),
+        });
+
+        const result = await response.json();
+        const transcription = result.results
             .map(result => result.alternatives[0].transcript)
             .join('\n');
 
