@@ -62,6 +62,14 @@ p {
     padding-right: 50px;
 }
 
+.new-section .content-box {
+    background-color: #FFFFFF; /* Fundo branco */
+    padding: 20px;
+    border-radius: 10px;
+    color: #000000; /* Texto preto */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra */
+}
+
 .new-section .content h2 {
     font-size: 36px;
     margin-bottom: 20px;
@@ -108,11 +116,14 @@ p {
     background-color: #00529B;
     color: #FFFFFF;
     padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     text-align: center;
 }
 
 .footer-content {
-    margin-bottom: 10px;
+    flex: 1;
 }
 
 .footer h3 {
@@ -122,6 +133,17 @@ p {
 
 .footer p {
     margin: 0;
+    color: #FFFFFF; /* Altera o texto para branco */
+}
+
+.footer-logo {
+    flex: 0;
+    margin-left: 20px;
+}
+
+.footer-logo img {
+    max-height: 60px; /* Tamanho máximo da logo */
+    width: auto;
 }
 
 /* Estilos do ícone do chatbot */
