@@ -62,6 +62,12 @@ p {
     gap: 10px;
 }
 
+.chat-button-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .chat-button {
     background-color: #337AB7;
     color: white;
@@ -72,26 +78,40 @@ p {
     font-size: 16px;
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 1;
 }
 
 .chat-button:hover {
     background-color: #285E8E;
 }
 
+.chat-button-arrow-right {
+    position: absolute;
+    top: 50%;
+    right: -15px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 15px solid #337AB7;
+    transform: translateY(-50%);
+}
+
 .chat-icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 150x; /* Aumentado para 70px */
-    height: 150x; /* Aumentado para 70px */
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.3); /* Fundo transparente */
     cursor: pointer;
 }
 
 .chat-icon-image {
-    width: 120px; /* Aumentado para 60px */
-    height: 180px; /* Aumentado para 60px */
+    width: 130px;
+    height: 160px;
     border-radius: 50%;
 }
 
