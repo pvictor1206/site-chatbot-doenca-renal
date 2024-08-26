@@ -150,7 +150,7 @@ p {
 /* Estilos do ícone do chatbot */
 .chat-icon {
     position: fixed;
-    right: 80px;
+    right: 100px;
     bottom: 80px;
     display: flex;
     align-items: center;
