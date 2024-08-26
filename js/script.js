@@ -146,3 +146,12 @@ async function transcribeAudio(audioBlob) {
         processUserMessage(transcription.toLowerCase());
     };
 }
+
+function toggleMinimizeChat() {
+    const chatWindow = document.getElementById('chat-window');
+    if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+        chatWindow.style.display = 'block';  // Mostra a janela de chat
+    } else {
+        chatWindow.style.display = 'none';   // Esconde a janela de chat
+    }
+}
