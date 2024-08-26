@@ -204,16 +204,16 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 70px;
-    height: 70px;
+    width: 120px;
+    height: 175px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.3); /* Fundo transparente */
     cursor: pointer;
 }
 
 .chat-icon-image {
-    width: 60px;
-    height: 60px;
+    width: 180px;
+    height: 200px;
     border-radius: 50%;
 }
 
