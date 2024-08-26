@@ -2,7 +2,8 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to right, #8EC5FC, #E0C3FC);
+    background: linear-gradient(to right, #7F7FD5, #86A8E7, #91EAE4); /* Fundo gradiente ajustado */
+    color: #000000; /* Mudar a cor padrão do texto para preto */
 }
 
 .container {
@@ -21,6 +22,10 @@ body {
 .right {
     flex: 2;
     padding-left: 50px;
+    border: 2px solid #FFFFFF; /* Adiciona uma borda ao redor do título e texto */
+    border-radius: 10px; /* Borda arredondada */
+    padding: 20px; /* Espaçamento interno */
+    background-color: rgba(255, 255, 255, 0.1); /* Fundo levemente transparente para destacar o conteúdo */
 }
 
 .lina-image {
@@ -29,13 +34,13 @@ body {
 }
 
 h1 {
-    color: #ffffff;
+    color: #000000; /* Cor preta para o título */
     font-size: 48px;
     margin-bottom: 20px;
 }
 
 p {
-    color: #ffffff;
+    color: #000000; /* Cor preta para o texto */
     font-size: 18px;
     line-height: 1.5;
     margin-bottom: 20px;
