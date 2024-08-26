@@ -40,7 +40,7 @@ function addBotMessage(message) {
 
 function processUserMessage(message) {
     if (message.includes('oi') || message.includes('olá') || message.includes('bom dia') || message.includes('boa tarde')) {
-        addBotMessage("Olá sou um robô virtual com a finalidade de oferecer orientações às pessoas em hemodiálise sobre cuidados diários e bem-estar. Então vamos lá! Como você prefere ser chamado?");
+        addBotMessage("Olá, sou um robô virtual com a finalidade de oferecer orientações às pessoas em hemodiálise sobre cuidados diários e bem-estar, então vamos lá! Como você prefere ser chamado?");
     } else if (message.includes('meu nome é') || message.includes('sou') || message.includes('me chamo')) {
         const name = message.split(' ').slice(-1)[0]; // Captura o último nome como o nome do usuário
         addBotMessage(`${name}, para que esse momento seja mais prático, você tem a opção de colocar a tela em modo cheio/grande, digitar ou gravar suas perguntas como também ouvir suas respostas caso prefira. Vamos começar, coloque abaixo sua dúvida.`);
