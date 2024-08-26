@@ -82,16 +82,16 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: 150x; /* Aumentado para 70px */
+    height: 150x; /* Aumentado para 70px */
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.3); /* Fundo transparente */
     cursor: pointer;
 }
 
 .chat-icon-image {
-    width: 50px;
-    height: 50px;
+    width: 120px; /* Aumentado para 60px */
+    height: 180px; /* Aumentado para 60px */
     border-radius: 50%;
 }
 
