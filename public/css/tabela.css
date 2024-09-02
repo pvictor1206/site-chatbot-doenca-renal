@@ -16,7 +16,9 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 1200px;
-    overflow-x: auto;
+    max-height: 600px; /* Limita a altura máxima da tabela */
+    overflow-y: auto; /* Adiciona uma barra de rolagem vertical */
+    overflow-x: hidden; /* Evita a barra de rolagem horizontal */
 }
 
 h2 {
@@ -31,7 +33,7 @@ label {
 table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* Garante que as colunas não se expandam indefinidamente */
+    table-layout: fixed;
 }
 
 table, th, td {
@@ -46,13 +48,13 @@ th, td {
 
 textarea {
     width: 100%;
-    box-sizing: border-box; /* Garante que a largura do textarea inclua o padding e a borda */
+    box-sizing: border-box;
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-    resize: vertical; /* Permite que o usuário expanda o textarea verticalmente */
+    resize: vertical;
     min-height: 50px;
-    max-height: 200px; /* Limita a altura máxima para manter o layout controlado */
+    max-height: 200px;
     overflow-y: auto;
 }
 
@@ -62,15 +64,20 @@ input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 0.5rem;
-    box-sizing: border-box; /* Garante que a largura do input inclua o padding e a borda */
+    box-sizing: border-box;
 }
 
 select.num-questions {
-    width: 100%; /* Ajusta o seletor para que ocupe todo o espaço disponível */
+    width: 100%;
     padding: 0.5rem;
-    box-sizing: border-box; /* Garante que o padding e a borda sejam incluídos no tamanho total */
+    box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.questions-container {
+    max-height: 200px; /* Limita a altura da célula de perguntas */
+    overflow-y: auto; /* Adiciona uma barra de rolagem vertical */
 }
 
 button {
