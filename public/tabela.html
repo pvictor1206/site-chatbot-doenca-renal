@@ -9,21 +9,31 @@
 <body>
     <div class="container">
         <h2>Respostas e Perguntas</h2>
-        <table>
+
+        <table id="dynamic-table">
             <thead>
                 <tr>
                     <th>Resposta</th>
-                    <th>Pergunta 1</th>
-                    <th>Pergunta 2</th>
-                    <th>Pergunta 3</th>
+                    <th style="width: 150px;">Número de Perguntas</th>
+                    <th>Perguntas</th>
                 </tr>
             </thead>
             <tbody id="table-body">
                 <tr>
-                    <td><input type="text" placeholder="Resposta"></td>
-                    <td><input type="text" placeholder="Pergunta 1"></td>
-                    <td><input type="text" placeholder="Pergunta 2"></td>
-                    <td><input type="text" placeholder="Pergunta 3"></td>
+                    <td><textarea placeholder="Resposta"></textarea></td>
+                    <td>
+                        <select class="num-questions">
+                            <!-- Aqui vamos garantir que as opções sejam geradas corretamente -->
+                            <script>
+                                for (let i = 1; i <= 40; i++) {
+                                    document.write('<option value="' + i + '">' + i + '</option>');
+                                }
+                            </script>
+                        </select>
+                    </td>
+                    <td class="questions-container">
+                        <input type="text" placeholder="Pergunta 1">
+                    </td>
                 </tr>
             </tbody>
         </table>
