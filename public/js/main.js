@@ -1,11 +1,6 @@
-document.getElementById('show-register').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('login-container').classList.add('hidden');
-    document.getElementById('register-container').classList.remove('hidden');
-});
+document.getElementById('login-button').addEventListener('click', function() {
+    // Lógica de autenticação pode ser adicionada aqui
 
-document.getElementById('show-login').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('register-container').classList.add('hidden');
-    document.getElementById('login-container').classList.remove('hidden');
+    // Após autenticação bem-sucedida, redireciona para a página da tabela
+    window.location.href = 'tabela.html';
 });
