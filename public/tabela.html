@@ -17,31 +17,17 @@
                     <th>Resposta</th>
                     <th style="width: 150px;">Número de Perguntas</th>
                     <th>Perguntas</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody id="table-body">
-                <tr>
-                    <td><textarea placeholder="Resposta"></textarea></td>
-                    <td>
-                        <select class="num-questions">
-                            <script>
-                                for (let i = 1; i <= 40; i++) {
-                                    document.write('<option value="' + i + '">' + i + '</option>');
-                                }
-                            </script>
-                        </select>
-                    </td>
-                    <td class="questions-container">
-                        <input type="text" placeholder="Pergunta 1">
-                    </td>
-                </tr>
+                <!-- Linhas serão inseridas dinamicamente aqui -->
             </tbody>
         </table>
         <button id="add-row-button">Adicionar Linha</button>
     </div>
 
-    <!-- Seu arquivo JS -->
+    <!-- Referência ao arquivo JS principal -->
     <script type="module" src="js/tabela.js"></script>
 </body>
 </html>
-<h1></h1>
