@@ -17,7 +17,7 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = 'auth.html';
     } else {
         console.log('Usuário autenticado:', user);
-        loadTableData();
+        loadTableData(); // Carrega os dados existentes
     }
 });
 
@@ -103,7 +103,7 @@ async function loadTableData() {
             <td>
                 <select class="resposta-encaminhada">
                     <option value="">Selecione</option>
-                    <option value="${data.respostaEncaminhada}" selected>${data.respostaEncaminhada}</option>
+                    ${getDropdownOptions(data.respostaEncaminhada)}
                 </select>
             </td>
             <td>
@@ -121,6 +121,20 @@ async function loadTableData() {
     updateDropdown();  // Atualiza o dropdown de respostas
 }
 
+// Função para gerar as opções do dropdown e selecionar a correta
+function getDropdownOptions(selectedValue) {
+    let options = '<option value="">Selecione</option>';
+    document.querySelectorAll('.resposta-encaminhada option').forEach(option => {
+        if (option.value && option.value !== selectedValue) {
+            options += `<option value="${option.value}">${option.value}</option>`;
+        }
+    });
+    if (selectedValue) {
+        options += `<option value="${selectedValue}" selected>${selectedValue}</option>`;
+    }
+    return options;
+}
+
 // Função para lidar com as mudanças do campo "Extra Info"
 function handleExtraInfo(selectElement, extraInfoContainer) {
     selectElement.addEventListener('change', function() {
@@ -134,11 +148,12 @@ function handleExtraInfo(selectElement, extraInfoContainer) {
 
 // Função para lidar com atualizações automáticas ao editar a linha
 function handleRowUpdates(row, docId) {
-    row.querySelector('textarea').addEventListener('input', async (e) => {
+    row.querySelector('textarea').addEventListener('input', debounce(async (e) => {
         await updateDoc(doc(db, "tabelaRespostas", docId), {
             resposta: e.target.value
         });
-    });
+        updateDropdown();
+    }, 500));
 
     row.querySelector('.num-questions').addEventListener('change', async (e) => {
         const numPerguntas = parseInt(e.target.value);
@@ -212,21 +227,34 @@ async function updateDropdown() {
     const dropdowns = document.querySelectorAll('.resposta-encaminhada');
     const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
     
-    // Limpa o dropdown de respostas existentes
-    dropdowns.forEach(dropdown => {
-        dropdown.innerHTML = '<option value="">Selecione</option>';
+    const respostas = [];
+    querySnapshot.forEach((doc) => {
+        respostas.push(doc.data().resposta);
     });
 
-    // Popula o dropdown com as respostas
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        dropdowns.forEach(dropdown => {
+    // Limpa o dropdown de respostas existentes e popula com os valores corretos
+    dropdowns.forEach(dropdown => {
+        const selectedValue = dropdown.value;
+        dropdown.innerHTML = '<option value="">Selecione</option>';
+        respostas.forEach(resposta => {
             const option = document.createElement('option');
-            option.value = data.resposta;
-            option.textContent = data.resposta;
+            option.value = resposta;
+            option.textContent = resposta;
+            if (selectedValue === resposta) {
+                option.selected = true;
+            }
             dropdown.appendChild(option);
         });
     });
+}
+
+// Função de debounce para evitar várias atualizações de uma vez
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
 }
 
 document.querySelectorAll('.num-questions').forEach(updateQuestionInputs);
