@@ -9,6 +9,7 @@
 <body>
     <div class="container">
         <h2>Respostas e Perguntas ChatBot Camila</h2>
+        <button id="logout-button">Sair</button>
 
         <table id="dynamic-table">
             <thead>
@@ -39,31 +40,8 @@
         <button id="add-row-button">Adicionar Linha</button>
     </div>
 
-    <!-- Carregue o Firebase via CDN -->
-    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js"></script>
-
-    <!-- Carregar a inicialização do Firebase -->
-    <script src="js/firebase-init.js"></script>
-
-    <!-- Verifica o estado de autenticação -->
-    <script>
-        const auth = firebase.auth();
-
-        // Verifica o estado de autenticação do usuário ao carregar a página
-        auth.onAuthStateChanged((user) => {
-            if (!user) {
-                // Se o usuário não está autenticado, redirecione para a página de login
-                window.location.href = 'auth.html';
-            } else {
-                // O usuário está autenticado, pode acessar a página
-                console.log('Usuário autenticado:', user);
-            }
-        });
-    </script>
-
     <!-- Seu arquivo JS -->
-    <script src="js/tabela.js"></script>
+    <script type="module" src="js/tabela.js"></script>
 </body>
 </html>
 <h1></h1>

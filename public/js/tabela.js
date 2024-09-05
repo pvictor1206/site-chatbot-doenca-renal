@@ -1,6 +1,27 @@
 import { auth } from './firebase-init';
 import { onAuthStateChanged } from "firebase/auth";
 
+// Função de logout
+document.getElementById('logout-button').addEventListener('click', function() {
+    auth.signOut().then(() => {
+        // Redireciona para a página de login após logout
+        window.location.href = 'auth.html';
+    }).catch((error) => {
+        console.error('Erro ao sair:', error);
+    });
+});
+
+// Verifica o estado de autenticação do usuário ao carregar a página
+auth.onAuthStateChanged((user) => {
+  if (!user) {
+      // Se o usuário não está autenticado, redirecione para a página de login
+       window.location.href = 'auth.html';
+  } else {
+      // O usuário está autenticado, pode acessar a página
+      console.log('Usuário autenticado:', user);
+   }
+});
+
 // Verifica o estado de autenticação
 onAuthStateChanged(auth, (user) => {
     if (!user) {
