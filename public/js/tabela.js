@@ -1,3 +1,15 @@
+import { auth } from './firebase-init';
+import { onAuthStateChanged } from "firebase/auth";
+
+// Verifica o estado de autenticação
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        // Redireciona para a página de login
+        window.location.href = 'auth.html';
+    }
+});
+
+
 document.getElementById('add-row-button').addEventListener('click', function() {
     const tableBody = document.getElementById('table-body');
     const newRow = document.createElement('tr');
