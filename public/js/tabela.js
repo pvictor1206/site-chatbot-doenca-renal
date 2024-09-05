@@ -15,12 +15,10 @@ document.getElementById('logout-button').addEventListener('click', function() {
 // Verifica o estado de autenticação do usuário ao carregar a página
 onAuthStateChanged(auth, (user) => {
     if (!user) {
-        // Se o usuário não está autenticado, redirecione para a página de login
         window.location.href = 'auth.html';
     } else {
-        // O usuário está autenticado, pode acessar a página
         console.log('Usuário autenticado:', user);
-        loadTableData(); // Carrega os dados existentes na tabela
+        loadTableData(); // Carrega os dados existentes
     }
 });
 
@@ -40,21 +38,32 @@ document.getElementById('add-row-button').addEventListener('click', async functi
             <input type="text" placeholder="Pergunta 1">
         </td>
         <td>
+            <select class="extra-info">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+            </select>
+        </td>
+        <td class="extra-info-container" style="display:none;">
+            <textarea placeholder="Informação Extra"></textarea>
+        </td>
+        <td>
             <button class="delete-row-button">Excluir</button>
         </td>
     `;
 
     tableBody.appendChild(newRow);
     updateQuestionInputs(newRow.querySelector('.num-questions'));
+    handleExtraInfo(newRow.querySelector('.extra-info'), newRow.querySelector('.extra-info-container'));
 
-    // Salva a nova linha no Firestore
     const docRef = await addDoc(collection(db, "tabelaRespostas"), {
         resposta: "",
         numeroDePerguntas: 1,
-        perguntas: [""]
+        perguntas: [""],
+        extraInfo: "",
+        temExtraInfo: "nao"
     });
 
-    newRow.dataset.id = docRef.id; // Atribui o ID do documento à linha
+    newRow.dataset.id = docRef.id;
     handleRowUpdates(newRow, docRef.id);
 });
 
@@ -77,39 +86,57 @@ async function loadTableData() {
                 ${data.perguntas.map((pergunta, i) => `<input type="text" placeholder="Pergunta ${i + 1}" value="${pergunta}">`).join('')}
             </td>
             <td>
+                <select class="extra-info">
+                    <option value="nao" ${data.temExtraInfo === "nao" ? "selected" : ""}>Não</option>
+                    <option value="sim" ${data.temExtraInfo === "sim" ? "selected" : ""}>Sim</option>
+                </select>
+            </td>
+            <td class="extra-info-container" style="${data.temExtraInfo === "sim" ? "" : "display:none;"}">
+                <textarea placeholder="Informação Extra">${data.extraInfo}</textarea>
+            </td>
+            <td>
                 <button class="delete-row-button">Excluir</button>
             </td>
         `;
 
         tableBody.appendChild(newRow);
-        newRow.dataset.id = doc.id; // Atribui o ID do documento à linha
+        newRow.dataset.id = doc.id;
+
         updateQuestionInputs(newRow.querySelector('.num-questions'));
-        handleRowUpdates(newRow, doc.id); // Função para lidar com as atualizações
+        handleExtraInfo(newRow.querySelector('.extra-info'), newRow.querySelector('.extra-info-container'));
+        handleRowUpdates(newRow, doc.id);
+    });
+}
+
+// Função para lidar com as mudanças do campo "Extra Info"
+function handleExtraInfo(selectElement, extraInfoContainer) {
+    selectElement.addEventListener('change', function() {
+        if (this.value === "sim") {
+            extraInfoContainer.style.display = '';
+        } else {
+            extraInfoContainer.style.display = 'none';
+        }
     });
 }
 
 // Função para lidar com atualizações automáticas ao editar a linha
 function handleRowUpdates(row, docId) {
-    // Atualizar a resposta
     row.querySelector('textarea').addEventListener('input', async (e) => {
         await updateDoc(doc(db, "tabelaRespostas", docId), {
             resposta: e.target.value
         });
     });
 
-    // Atualizar o número de perguntas e as perguntas
     row.querySelector('.num-questions').addEventListener('change', async (e) => {
         const numPerguntas = parseInt(e.target.value);
         const perguntas = [];
         const questionsContainer = row.querySelector('.questions-container');
-        
-        // Atualiza o Firestore
+
         await updateDoc(doc(db, "tabelaRespostas", docId), {
             numeroDePerguntas: numPerguntas,
             perguntas: perguntas
         });
 
-        // Limpa as perguntas existentes e adiciona as novas
         questionsContainer.innerHTML = '';
         for (let i = 1; i <= numPerguntas; i++) {
             const input = document.createElement('input');
@@ -125,10 +152,21 @@ function handleRowUpdates(row, docId) {
         }
     });
 
-    // Função para excluir a linha
+    row.querySelector('.extra-info').addEventListener('change', async (e) => {
+        await updateDoc(doc(db, "tabelaRespostas", docId), {
+            temExtraInfo: e.target.value
+        });
+    });
+
+    row.querySelector('.extra-info-container textarea').addEventListener('input', async (e) => {
+        await updateDoc(doc(db, "tabelaRespostas", docId), {
+            extraInfo: e.target.value
+        });
+    });
+
     row.querySelector('.delete-row-button').addEventListener('click', async () => {
-        await deleteDoc(doc(db, "tabelaRespostas", docId)); // Deleta o documento no Firestore
-        row.remove(); // Remove a linha da tabela
+        await deleteDoc(doc(db, "tabelaRespostas", docId));
+        row.remove();
     });
 }
 
@@ -138,10 +176,7 @@ function updateQuestionInputs(selectElement) {
         const numQuestions = parseInt(this.value);
         const questionsContainer = this.parentNode.nextElementSibling;
 
-        // Limpa as perguntas existentes
         questionsContainer.innerHTML = '';
-
-        // Adiciona novas perguntas com base na seleção
         for (let i = 1; i <= numQuestions; i++) {
             const input = document.createElement('input');
             input.type = 'text';
@@ -151,5 +186,4 @@ function updateQuestionInputs(selectElement) {
     });
 }
 
-// Aplica a função a todos os selects existentes ao carregar a página
 document.querySelectorAll('.num-questions').forEach(updateQuestionInputs);
