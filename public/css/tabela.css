@@ -16,18 +16,22 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 1200px;
-    max-height: 600px; /* Limita a altura máxima da tabela */
-    overflow-y: auto; /* Adiciona uma barra de rolagem vertical */
-    overflow-x: hidden; /* Evita a barra de rolagem horizontal */
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative; /* Permite o posicionamento absoluto de elementos */
+    margin: auto; /* Centraliza horizontalmente e verticalmente */
+}
+
+.header {
+    position: absolute; /* Faz o botão flutuar em relação ao container */
+    top: 10px; /* Posiciona o botão 10px a partir do topo */
+    right: 10px; /* Posiciona o botão 10px a partir da direita */
 }
 
 h2 {
     text-align: center;
     margin-bottom: 1rem;
-}
-
-label {
-    margin-right: 1rem;
 }
 
 table {
@@ -76,8 +80,8 @@ select.num-questions {
 }
 
 .questions-container {
-    max-height: 200px; /* Limita a altura da célula de perguntas */
-    overflow-y: auto; /* Adiciona uma barra de rolagem vertical */
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 button {
@@ -94,5 +98,18 @@ button {
 }
 
 button:hover {
+    background-color: #0056b3;
+}
+
+#logout-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#logout-button:hover {
     background-color: #0056b3;
 }

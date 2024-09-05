@@ -8,8 +8,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <button id="logout-button">Sair</button>
+        </div>
         <h2>Respostas e Perguntas ChatBot Camila</h2>
-        <button id="logout-button">Sair</button>
 
         <table id="dynamic-table">
             <thead>
@@ -19,8 +21,8 @@
                     <th>Perguntas</th>
                     <th>Informação Extra?</th>
                     <th>Informação Extra</th>
-                    <th>Encaminhamento</th> <!-- Título atualizado -->
-                    <th>Ações</th> <!-- Novo título para o botão de exclusão -->
+                    <th>Encaminhamento</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody id="table-body">
@@ -30,7 +32,6 @@
         <button id="add-row-button">Adicionar Linha</button>
     </div>
 
-    <!-- Seu arquivo JS -->
     <script type="module" src="js/tabela.js"></script>
 </body>
 </html>
