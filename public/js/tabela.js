@@ -1,11 +1,10 @@
 import { auth, db } from './firebase-init';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc } from "firebase/firestore"; // Funções do Firestore
+import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc } from "firebase/firestore";
 
 // Função de logout
 document.getElementById('logout-button').addEventListener('click', function() {
     signOut(auth).then(() => {
-        // Redireciona para a página de login após logout
         window.location.href = 'auth.html';
     }).catch((error) => {
         console.error('Erro ao sair:', error);
@@ -18,7 +17,7 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = 'auth.html';
     } else {
         console.log('Usuário autenticado:', user);
-        loadTableData(); // Carrega os dados existentes
+        loadTableData();
     }
 });
 
@@ -47,6 +46,11 @@ document.getElementById('add-row-button').addEventListener('click', async functi
             <textarea placeholder="Informação Extra"></textarea>
         </td>
         <td>
+            <select class="resposta-encaminhada">
+                <option value="">Selecione</option>
+            </select>
+        </td>
+        <td>
             <button class="delete-row-button">Excluir</button>
         </td>
     `;
@@ -60,11 +64,13 @@ document.getElementById('add-row-button').addEventListener('click', async functi
         numeroDePerguntas: 1,
         perguntas: [""],
         extraInfo: "",
-        temExtraInfo: "nao"
+        temExtraInfo: "nao",
+        respostaEncaminhada: ""  // Novo campo adicionado
     });
 
     newRow.dataset.id = docRef.id;
     handleRowUpdates(newRow, docRef.id);
+    updateDropdown(); // Atualiza o dropdown com as respostas disponíveis
 });
 
 // Função para carregar dados existentes do Firestore na tabela
@@ -95,6 +101,12 @@ async function loadTableData() {
                 <textarea placeholder="Informação Extra">${data.extraInfo}</textarea>
             </td>
             <td>
+                <select class="resposta-encaminhada">
+                    <option value="">Selecione</option>
+                    <option value="${data.respostaEncaminhada}" selected>${data.respostaEncaminhada}</option>
+                </select>
+            </td>
+            <td>
                 <button class="delete-row-button">Excluir</button>
             </td>
         `;
@@ -106,6 +118,7 @@ async function loadTableData() {
         handleExtraInfo(newRow.querySelector('.extra-info'), newRow.querySelector('.extra-info-container'));
         handleRowUpdates(newRow, doc.id);
     });
+    updateDropdown();  // Atualiza o dropdown de respostas
 }
 
 // Função para lidar com as mudanças do campo "Extra Info"
@@ -164,9 +177,17 @@ function handleRowUpdates(row, docId) {
         });
     });
 
+    // Atualizando o campo de resposta encaminhada
+    row.querySelector('.resposta-encaminhada').addEventListener('change', async (e) => {
+        await updateDoc(doc(db, "tabelaRespostas", docId), {
+            respostaEncaminhada: e.target.value
+        });
+    });
+
     row.querySelector('.delete-row-button').addEventListener('click', async () => {
         await deleteDoc(doc(db, "tabelaRespostas", docId));
         row.remove();
+        updateDropdown();
     });
 }
 
@@ -183,6 +204,28 @@ function updateQuestionInputs(selectElement) {
             input.placeholder = `Pergunta ${i}`;
             questionsContainer.appendChild(input);
         }
+    });
+}
+
+// Função para atualizar o dropdown com as respostas disponíveis
+async function updateDropdown() {
+    const dropdowns = document.querySelectorAll('.resposta-encaminhada');
+    const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
+    
+    // Limpa o dropdown de respostas existentes
+    dropdowns.forEach(dropdown => {
+        dropdown.innerHTML = '<option value="">Selecione</option>';
+    });
+
+    // Popula o dropdown com as respostas
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        dropdowns.forEach(dropdown => {
+            const option = document.createElement('option');
+            option.value = data.resposta;
+            option.textContent = data.resposta;
+            dropdown.appendChild(option);
+        });
     });
 }
 
