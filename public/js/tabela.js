@@ -43,7 +43,7 @@ document.getElementById('add-row-button').addEventListener('click', async functi
                 <option value="sim">Sim</option>
             </select>
         </td>
-        <td class="extra-info-container" style="display:none;">
+        <td class="extra-info-container">
             <textarea placeholder="Informação Extra"></textarea>
         </td>
         <td>
@@ -91,7 +91,7 @@ async function loadTableData() {
                     <option value="sim" ${data.temExtraInfo === "sim" ? "selected" : ""}>Sim</option>
                 </select>
             </td>
-            <td class="extra-info-container" style="${data.temExtraInfo === "sim" ? "" : "display:none;"}">
+            <td class="extra-info-container ${data.temExtraInfo === "sim" ? "visible" : ""}">
                 <textarea placeholder="Informação Extra">${data.extraInfo}</textarea>
             </td>
             <td>
@@ -112,9 +112,9 @@ async function loadTableData() {
 function handleExtraInfo(selectElement, extraInfoContainer) {
     selectElement.addEventListener('change', function() {
         if (this.value === "sim") {
-            extraInfoContainer.style.display = '';
+            extraInfoContainer.classList.add('visible');
         } else {
-            extraInfoContainer.style.display = 'none';
+            extraInfoContainer.classList.remove('visible');
         }
     });
 }
