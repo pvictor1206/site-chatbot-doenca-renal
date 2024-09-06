@@ -1,6 +1,6 @@
 import { auth, db } from './firebase-init';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy } from "firebase/firestore";
 
 // Função de logout
 document.getElementById('logout-button').addEventListener('click', function() {
@@ -65,7 +65,8 @@ document.getElementById('add-row-button').addEventListener('click', async functi
         perguntas: [""],
         extraInfo: "",
         temExtraInfo: "nao",
-        respostaEncaminhada: ""  // Novo campo adicionado
+        respostaEncaminhada: "",
+        timestamp: new Date()  // Adiciona a data e hora de envio
     });
 
     newRow.dataset.id = docRef.id;
@@ -73,9 +74,11 @@ document.getElementById('add-row-button').addEventListener('click', async functi
     updateDropdown(); // Atualiza o dropdown com as respostas disponíveis
 });
 
-// Função para carregar dados existentes do Firestore na tabela
+// Função para carregar dados existentes do Firestore na tabela em ordem cronológica
 async function loadTableData() {
-    const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
+    const q = query(collection(db, "tabelaRespostas"), orderBy("timestamp", "asc"));  // Ordena por timestamp
+    const querySnapshot = await getDocs(q);
+    
     querySnapshot.forEach((doc) => {
         const data = doc.data();
         const tableBody = document.getElementById('table-body');
@@ -148,7 +151,9 @@ function handleExtraInfo(selectElement, extraInfoContainer) {
 
 // Função para lidar com atualizações automáticas ao editar a linha
 function handleRowUpdates(row, docId) {
-    row.querySelector('textarea').addEventListener('input', debounce(async (e) => {
+    let perguntas = [];  // Declarar o array de perguntas aqui
+
+    row.querySelector('textarea').addEventListener('blur', debounce(async (e) => {
         await updateDoc(doc(db, "tabelaRespostas", docId), {
             resposta: e.target.value
         });
@@ -157,27 +162,51 @@ function handleRowUpdates(row, docId) {
 
     row.querySelector('.num-questions').addEventListener('change', async (e) => {
         const numPerguntas = parseInt(e.target.value);
-        const perguntas = [];
         const questionsContainer = row.querySelector('.questions-container');
 
-        await updateDoc(doc(db, "tabelaRespostas", docId), {
-            numeroDePerguntas: numPerguntas,
-            perguntas: perguntas
-        });
+        // Redefinir o array `perguntas`, preservando as já preenchidas
+        perguntas = perguntas.slice(0, numPerguntas);  // Mantém as perguntas já preenchidas até o limite
 
+        // Se o número de perguntas for maior que o atual, preenche o array com strings vazias
+        if (perguntas.length < numPerguntas) {
+            perguntas = perguntas.concat(Array(numPerguntas - perguntas.length).fill(''));
+        }
+
+        // Limpa o container e adiciona as perguntas existentes ou vazias
         questionsContainer.innerHTML = '';
         for (let i = 1; i <= numPerguntas; i++) {
             const input = document.createElement('input');
             input.type = 'text';
             input.placeholder = `Pergunta ${i}`;
+            input.value = perguntas[i - 1];  // Preenche com o valor atual ou vazio
+
+            // Atualiza o array de perguntas ao digitar
             input.addEventListener('input', async function() {
-                perguntas[i - 1] = input.value;
+                perguntas[i - 1] = input.value;  // Atualiza o array de perguntas
                 await updateDoc(doc(db, "tabelaRespostas", docId), {
-                    perguntas: perguntas
+                    perguntas: perguntas  // Atualiza o Firestore com o array de perguntas atualizado
                 });
             });
+
             questionsContainer.appendChild(input);
         }
+
+        // Atualiza o Firestore com o novo número de perguntas e mantém o array de perguntas
+        await updateDoc(doc(db, "tabelaRespostas", docId), {
+            numeroDePerguntas: numPerguntas,
+            perguntas: perguntas
+        });
+    });
+
+    // Atualiza as perguntas em tempo real enquanto o usuário digita
+    const questionInputs = row.querySelectorAll('.questions-container input');
+    questionInputs.forEach((input, index) => {
+        input.addEventListener('input', async function() {
+            perguntas[index] = input.value;  // Atualiza o array de perguntas enquanto o usuário digita
+            await updateDoc(doc(db, "tabelaRespostas", docId), {
+                perguntas: perguntas  // Atualiza o Firestore com o array de perguntas atualizado
+            });
+        });
     });
 
     row.querySelector('.extra-info').addEventListener('change', async (e) => {
@@ -186,7 +215,7 @@ function handleRowUpdates(row, docId) {
         });
     });
 
-    row.querySelector('.extra-info-container textarea').addEventListener('input', async (e) => {
+    row.querySelector('.extra-info-container textarea').addEventListener('blur', async (e) => {
         await updateDoc(doc(db, "tabelaRespostas", docId), {
             extraInfo: e.target.value
         });
@@ -205,6 +234,8 @@ function handleRowUpdates(row, docId) {
         updateDropdown();
     });
 }
+
+
 
 // Atualiza as perguntas para cada linha quando o número de perguntas é alterado
 function updateQuestionInputs(selectElement) {
