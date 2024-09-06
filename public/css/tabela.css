@@ -19,14 +19,14 @@ body {
     max-height: 600px;
     overflow-y: auto;
     overflow-x: hidden;
-    position: relative; /* Permite o posicionamento absoluto de elementos */
-    margin: auto; /* Centraliza horizontalmente e verticalmente */
+    position: relative;
+    margin: auto;
 }
 
 .header {
-    position: absolute; /* Faz o botão flutuar em relação ao container */
-    top: 10px; /* Posiciona o botão 10px a partir do topo */
-    right: 10px; /* Posiciona o botão 10px a partir da direita */
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 h2 {
@@ -37,7 +37,7 @@ h2 {
 table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: fixed; /* Garante que todas as colunas tenham largura fixa */
 }
 
 table, th, td {
@@ -48,10 +48,12 @@ th, td {
     padding: 0.5rem;
     text-align: left;
     vertical-align: top;
+    word-wrap: break-word; /* Permite quebra de palavras longas */
 }
 
 textarea {
     width: 100%;
+    max-width: 250px; /* Limita a largura do textarea */
     box-sizing: border-box;
     padding: 0.5rem;
     border: 1px solid #ccc;
@@ -60,6 +62,7 @@ textarea {
     min-height: 50px;
     max-height: 200px;
     overflow-y: auto;
+    word-wrap: break-word; /* Permite que palavras longas sejam quebradas */
 }
 
 input[type="text"] {
@@ -77,6 +80,13 @@ select.num-questions {
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+select.resposta-encaminhada {
+    max-width: 150px; /* Limita a largura do dropdown */
+    white-space: nowrap; /* Impede que o texto quebre a linha */
+    overflow: hidden; /* Esconde o texto que ultrapassar a largura */
+    text-overflow: ellipsis; /* Adiciona '...' ao final do texto longo */
 }
 
 .questions-container {
