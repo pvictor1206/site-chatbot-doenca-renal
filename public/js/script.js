@@ -47,25 +47,40 @@ async function processUserMessage(message) {
     }
 }
 
-// Função para lidar com a resposta do bot
 async function handleResponse(doc, data) {
     addBotMessage(data.resposta);
 
-    if (data.temExtraInfo === "Sim") {
+    // Normalizar o valor de 'temExtraInfo' para evitar problemas de comparação
+    const hasExtraInfo = data.temExtraInfo && data.temExtraInfo.toLowerCase() === "sim";
+
+    if (hasExtraInfo) {
         const encaminhamento = data.respostaEncaminhada;
 
-        if (encaminhamento) {
-            const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
-            querySnapshot.forEach((docEnc) => {
-                const dataEnc = docEnc.data();
-                if (dataEnc.resposta === encaminhamento) {
-                    handleResponse(docEnc, dataEnc);
-                }
-            });
-        } else {
-            addBotMessage(data.extraInfo);
-        }
+        // Exibe o botão de informação extra
+        addExtraInfoButton(data.extraInfo, encaminhamento);
     }
+}
+
+// Função para adicionar o botão de informação extra
+function addExtraInfoButton(extraInfo, encaminhamento) {
+    const chatBody = document.getElementById('chat-body');
+    const extraButton = document.createElement('button');
+    extraButton.classList.add('read-more-button');
+    extraButton.textContent = extraInfo; // Botão exibe o texto de 'extraInfo'
+    
+    // Ao clicar no botão, encaminha para a respostaEncaminhada
+    extraButton.onclick = async () => {
+        const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
+        querySnapshot.forEach((docEnc) => {
+            const dataEnc = docEnc.data();
+            if (dataEnc.resposta === encaminhamento) {
+                handleResponse(docEnc, dataEnc); // Chama handleResponse para mostrar a resposta
+            }
+        });
+    };
+    
+    chatBody.appendChild(extraButton);
+    chatBody.scrollTop = chatBody.scrollHeight;
 }
 
 // Função para adicionar a mensagem do bot

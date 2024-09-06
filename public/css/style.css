@@ -363,21 +363,18 @@ p {
     transform: scale(1.1);
 }
 
-/* Estilo para o botão "Leia também" */
 .read-more-button {
     background-color: transparent;
     border: none;
-    color: #FFFFFF; /* Cor branca para o texto */
+    color: #337AB7;
     text-decoration: underline;
     cursor: pointer;
-    font-style: italic;
     font-size: 14px;
-    padding: 0;
     margin-top: 10px;
 }
 
 .read-more-button:hover {
-    text-decoration: none;
+    color: #285E8E;
 }
 
 /* Estilo para as listas na mensagem do bot */
@@ -391,3 +388,4 @@ p {
 .chat-message li {
     margin-bottom: 5px;
 }
+
