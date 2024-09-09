@@ -1,6 +1,7 @@
-export default {
-    root: 'public', // Define 'public' como o diretório raiz
-    build: {
-      outDir: '../dist', // Define onde os arquivos compilados serão colocados
-    }
-  };
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  optimizeDeps: {
+    include: ['firebase/app', 'firebase/auth', 'firebase/firestore']
+  }
+});

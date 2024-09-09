@@ -1,4 +1,4 @@
-import { db } from './firebase-init';
+import { db } from 'firebase-init.js';
 import { collection, getDocs } from "firebase/firestore";
 
 // Definindo toggleChat no escopo global
