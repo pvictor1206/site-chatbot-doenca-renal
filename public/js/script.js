@@ -1,5 +1,7 @@
-import { db } from 'firebase-init.js';
-import { collection, getDocs } from "firebase/firestore";
+// script.js
+
+import { db } from './firebase-init.js';
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // Definindo toggleChat no escopo global
 window.toggleChat = function toggleChat() {
@@ -174,7 +176,7 @@ async function transcribeAudio(audioBlob) {
         const audioBytes = reader.result;
 
         const audio = {
-            content: audioBytes.toString('base64'),
+            content: btoa(String.fromCharCode(...new Uint8Array(audioBytes))),
         };
 
         const config = {

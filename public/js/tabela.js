@@ -1,6 +1,6 @@
-import { auth, db } from './firebase-init';
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy } from "firebase/firestore";
+import { auth, db } from './firebase-init.js';
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // Função de logout
 document.getElementById('logout-button').addEventListener('click', function() {

@@ -1,5 +1,5 @@
-import { auth } from './firebase-init';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from './firebase-init.js';
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
 // Função de login
 document.getElementById('login-button').addEventListener('click', function() {
