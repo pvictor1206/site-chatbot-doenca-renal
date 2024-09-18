@@ -1,7 +1,7 @@
+// script.js
+
 import { db } from './firebase-init.js';
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-let isFirstInteraction = true; // Variável para controlar se é a primeira interação
 
 // Definindo toggleChat no escopo global
 window.toggleChat = function toggleChat() {
@@ -25,26 +25,6 @@ window.toggleMinimizeChat = function toggleMinimizeChat() {
 
 // Função para processar a mensagem do usuário
 async function processUserMessage(message) {
-    // Se for a primeira interação, pegue a primeira resposta do banco e mostre-a
-    if (isFirstInteraction) {
-        const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
-        let firstResponseFound = false;
-
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-
-            if (!firstResponseFound) {
-                firstResponseFound = true;
-                handleResponse(doc, data); // Chama a primeira resposta
-            }
-        });
-
-        // Marca que a primeira interação já ocorreu
-        isFirstInteraction = false;
-        return;
-    }
-
-    // Normaliza a mensagem do usuário para comparar nas próximas interações
     const normalizedMessage = normalizeText(message);
 
     const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
@@ -55,6 +35,7 @@ async function processUserMessage(message) {
         // Verifica se perguntas é um array
         if (Array.isArray(data.perguntas)) {
             const perguntaCorreta = data.perguntas.find(pergunta => normalizeText(pergunta).includes(normalizedMessage));
+            console.log('Pergunta encontrada:', perguntaCorreta);
 
             if (perguntaCorreta) {
                 foundResponse = true;
@@ -63,9 +44,8 @@ async function processUserMessage(message) {
         }
     });
 
-    // Caso não encontre uma resposta, mostra uma mensagem padrão
     if (!foundResponse) {
-        addBotMessage("Desculpe, ainda estou aprendendo. Você pode perguntar algo sobre hemodiálise.");
+        addBotMessage("Desculpe, ainda estou aprendendo. Você pode perguntar algo sobre saúde.");
     }
 }
 
@@ -113,6 +93,11 @@ function addBotMessage(message) {
     botMessage.innerHTML = message;
     chatBody.appendChild(botMessage);
     chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Função para normalizar texto
+function normalizeText(text) {
+    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '').trim();
 }
 
 // Função para lidar com a entrada do usuário via teclado (Enter)
@@ -221,9 +206,4 @@ async function transcribeAudio(audioBlob) {
         addUserMessage(transcription);
         processUserMessage(transcription.toLowerCase());
     };
-}
-
-// Função para normalizar texto (usada para comparações)
-function normalizeText(text) {
-    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '').trim();
 }
