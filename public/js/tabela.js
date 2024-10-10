@@ -125,18 +125,33 @@ async function loadTableData() {
 }
 
 // Função para gerar as opções do dropdown e selecionar a correta
-function getDropdownOptions(selectedValue) {
+async function getDropdownOptions(selectedValue) {
     let options = '<option value="">Selecione</option>';
-    document.querySelectorAll('.resposta-encaminhada option').forEach(option => {
-        if (option.value && option.value !== selectedValue) {
-            options += `<option value="${option.value}">${option.value}</option>`;
+    
+    // Obtendo as respostas diretamente do Firestore
+    const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
+    const respostas = [];
+
+    querySnapshot.forEach((doc) => {
+        const resposta = doc.data().resposta;
+        respostas.push(resposta);  // Adiciona a resposta ao array
+    });
+
+    respostas.forEach(resposta => {
+        // Adiciona cada resposta como uma opção no dropdown
+        if (resposta !== selectedValue) {
+            options += `<option value="${resposta}">${resposta}</option>`;
         }
     });
+
+    // Se houver um valor selecionado, adicione como opção selecionada
     if (selectedValue) {
         options += `<option value="${selectedValue}" selected>${selectedValue}</option>`;
     }
+
     return options;
 }
+
 
 // Função para lidar com as mudanças do campo "Extra Info"
 function handleExtraInfo(selectElement, extraInfoContainer) {
