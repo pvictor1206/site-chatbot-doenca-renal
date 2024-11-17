@@ -47,6 +47,21 @@ p {
     margin-bottom: 20px;
 }
 
+.font-button {
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.font-button:hover {
+    background-color: #0056b3;
+}
+
 /* Segunda seção */
 .new-section {
     display: flex;
@@ -262,6 +277,7 @@ p {
 
 .chat-title {
     font-weight: bold;
+    margin-right: 10px;
 }
 
 .chat-subtitle {

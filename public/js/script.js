@@ -207,3 +207,45 @@ async function transcribeAudio(audioBlob) {
         processUserMessage(transcription.toLowerCase());
     };
 }
+
+// Função para aumentar o tamanho da fonte do chat
+window.increaseChatFontSize = function increaseChatFontSize() {
+    const chatBody = document.getElementById('chat-body');
+    const currentFontSize = window.getComputedStyle(chatBody).fontSize;
+    const newFontSize = parseFloat(currentFontSize) + 2 + 'px'; // Aumenta em 2px
+    chatBody.style.fontSize = newFontSize;
+
+    // Aumenta também o tamanho da fonte das mensagens, caso necessário
+    const messages = chatBody.querySelectorAll('.chat-message');
+    messages.forEach(message => {
+        message.style.fontSize = newFontSize;
+    });
+};
+
+// Função para aumentar o tamanho da fonte do chat
+window.increaseChatFontSize = function increaseChatFontSize() {
+    const chatBody = document.getElementById('chat-body');
+    const currentFontSize = window.getComputedStyle(chatBody).fontSize;
+    const newFontSize = parseFloat(currentFontSize) + 2 + 'px'; // Aumenta em 2px
+    chatBody.style.fontSize = newFontSize;
+
+    // Aumenta também o tamanho da fonte das mensagens
+    const messages = chatBody.querySelectorAll('.chat-message');
+    messages.forEach(message => {
+        message.style.fontSize = newFontSize;
+    });
+};
+
+// Função para diminuir o tamanho da fonte do chat
+window.decreaseChatFontSize = function decreaseChatFontSize() {
+    const chatBody = document.getElementById('chat-body');
+    const currentFontSize = window.getComputedStyle(chatBody).fontSize;
+    const newFontSize = parseFloat(currentFontSize) - 2 + 'px'; // Diminui em 2px
+    chatBody.style.fontSize = newFontSize;
+
+    // Diminui também o tamanho da fonte das mensagens
+    const messages = chatBody.querySelectorAll('.chat-message');
+    messages.forEach(message => {
+        message.style.fontSize = newFontSize;
+    });
+};
