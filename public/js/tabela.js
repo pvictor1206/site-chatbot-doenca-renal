@@ -127,28 +127,16 @@ async function loadTableData() {
 // Função para gerar as opções do dropdown e selecionar a correta
 async function getDropdownOptions(selectedValue) {
     let options = '<option value="">Selecione</option>';
-    
-    // Obtendo as respostas diretamente do Firestore
     const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
-    const respostas = [];
+    const respostas = querySnapshot.docs.map((doc) => doc.data().resposta);
 
-    querySnapshot.forEach((doc) => {
-        const resposta = doc.data().resposta;
-        respostas.push(resposta);  // Adiciona a resposta ao array
-    });
-
-    respostas.forEach(resposta => {
-        // Adiciona cada resposta como uma opção no dropdown
-        if (resposta !== selectedValue) {
+    respostas.forEach((resposta) => {
+        if (resposta === selectedValue) {
+            options += `<option value="${resposta}" selected>${resposta}</option>`;
+        } else {
             options += `<option value="${resposta}">${resposta}</option>`;
         }
     });
-
-    // Se houver um valor selecionado, adicione como opção selecionada
-    if (selectedValue) {
-        options += `<option value="${selectedValue}" selected>${selectedValue}</option>`;
-    }
-
     return options;
 }
 
@@ -238,6 +226,7 @@ function handleRowUpdates(row, docId) {
 
     // Atualizando o campo de resposta encaminhada
     row.querySelector('.resposta-encaminhada').addEventListener('change', async (e) => {
+        console.log("Doc ID:", docId); // Verifica se o ID está correto
         await updateDoc(doc(db, "tabelaRespostas", docId), {
             respostaEncaminhada: e.target.value
         });
