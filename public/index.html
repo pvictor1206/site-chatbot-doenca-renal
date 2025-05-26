@@ -9,49 +9,157 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap">
 </head>
 <body>
-    <div class="container">
-        <div class="left">
-            <img src="img/enfermeira01.png" alt="Enfermeira Camila" width="250">
+    <header>
+        <div class="logo">
+            <img src="img/logo-unilab.png" alt="UNILAB">
         </div>
-        <div class="right">
-            <h1>Conheça a Camila</h1>
-            <p>Olá? Tudo bem?</p>
-            <p>Lorem ipsum dolor sit amet. Non sunt consequatur ex reiciendis dignissimos aut quisquam sapiente...</p>
-        </div>
-    </div>
+        <nav>
+            <ul>
+                <li><a href="#">Apresentação</a></li>
+                <li><a href="#">Conheça a Camila</a></li>
+                <li><a href="#">Funcionalidades</a></li>
+                <li><a href="#">Conteúdo</a></li>
+                <li><a href="#">Suporte Técnico</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <!-- Segunda seção -->
-    <div class="new-section">
-        <div class="content">
-            <div class="content-box">
-                <h2>Saúde em Primeiro Lugar</h2>
-                <p>Lorem ipsum dolor sit amet...</p>
+    <main>
+        <section class="intro">
+            <div class="content">
+                <div class="text-container">
+                    <h1>CONVERSAR SOBRE A SUA SAÚDE NUNCA FOI TÃO FÁCIL</h1>
+                    <div class="text-group">
+                        <p>Lorem ipsum dolor sit amet. Rem dolor ducimus 33 voluptas eaque quo quam veniam 33 neque corporis quo cupiditate assumenda ut dolores galisum ut voluptas ipsum.</p>
+                        <p>Lorem ipsum dolor sit amet. Rem dolor ducimus 33 voluptas eaque quo quam veniam 33 neque corporis quo cupiditate assumenda ut dolores galisum ut voluptas ipsum.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="character-container">
+                <img src="img/enfermeira01.png" alt="Camila Chatbot" class="character">
+            </div>
+        </section>
+        
+        <section class="meet-julia">
+            <div class="text-paragraph">
+                <h2>Conheça a Camila</h2>
+                <p>Olá! Como você está?</p>
+                <p>
+                    Lorem ipsum dolor sit amet. Quo fugit ipsam ut quibusdam officiis et accusamus dolores sed error aliquid
+                    Lorem ipsum dolor sit amet. Quo fugit ipsam ut quibusdam officiis et accusamus dolores sed error aliquid 
+                    Lorem ipsum dolor sit amet. Quo fugit ipsam ut quibusdam officiis et accusamus dolores sed error aliquid.
+                </p>
+                <p>Lorem ipsum dolor sit amet.</p>
+                <p>Se quiser conversar agora, basta clicar no botão abaixo:</p>
+                <button id="start-chat-button" onclick="toggleChat()">Iniciar Conversa</button>
+            </div>
+        </section>
+
+        <section class="class-ferramentas">
+            <div class="text-ferramentas">
+                <h2>Ferramentas</h2>
+            </div>
+            <div class="icons-container">
+                <div class="tool">
+                    <img src="img/icone1.png" alt="Informações sobre saúde">
+                    <p>Lorem ipsum dolor sit amet</p>
+                </div>
+                <div class="tool">
+                    <img src="img/icone1.png" alt="Calculadora de ingestão diária de água">
+                    <p>Lorem ipsum dolor sit amet</p>
+                </div>
+                <div class="tool">
+                    <img src="img/icone1.png" alt="IMC">
+                    <p>Lorem ipsum dolor sit amet</p>
+                </div>
+                <div class="tool">
+                    <img src="img/icone1.png" alt="Contagem de calorias">
+                    <p>Lorem ipsum dolor sit amet</p>
+                </div>
+                <div class="tool">
+                    <img src="img/icone1.png" alt="Medição de risco cardiovascular">
+                    <p>Lorem ipsum dolor sit amet</p>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        
+        <section class="class-onde-surgiu-container">
+            <div class="class-onde-surgiu">
+                <div class="content-onde-surgiu">
+                    <div class="text-container-julia">
+                        <h2>De onde surgiu a Camila?</h2>
+                        <p>
+                            Lorem ipsum dolor sit amet. Quo fugit ipsam ut quibusdam officiis
+                            Lorem ipsum dolor sit amet. Quo fugit ipsam ut quibusdam officiis
+                            Lorem ipsum dolor sit amet. Quo fugit ipsam ut quibusdam officiis
+                            Lorem ipsum dolor sit amet. Quo fugit ipsam ut quibusdam officiis.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="class-onde-surgiu-lateral">
+                <div class="image-container-julia">
+                    <img src="img/enfermeira03.png" alt="Imagem da Júlia">
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <section class="class-topicos">
+        <div class="text-topicos">
+            <h2>Aqui estão alguns tópicos para conversarmos:</h2>
+            <ul>
+                <li>1) Lorem ipsum dolor sit amet;</li>
+                <li>2) Lorem ipsum dolor sit amet;</li>
+                <li>3) Lorem ipsum dolor sit amet;</li>
+                <li>4) Lorem ipsum dolor sit amet;</li>
+                <li>5) Lorem ipsum dolor sit amet;</li>
+                <li>6) Lorem ipsum dolor sit amet;</li>
+                <li>7) Lorem ipsum dolor sit amet;</li>
+                <li>8) Lorem ipsum dolor sit amet;</li>
+                <li>9) Lorem ipsum dolor sit amet;</li>
+                <li>10) Lorem ipsum dolor sit amet</li>
+            </ul>
+        </div>
+    </section>
+
+
+
+
+    <section class="class-contatos">
+        <div class="text-contatos">
+            <div class="contato-container">
+                <div class="contato-item">
+                    <h2>Contato</h2>
+                    <p>
+                        <img src="img/email-icon.png" alt="Ícone de email" class="icon"> email@gmail.com
+                    </p>
+                </div>
+                <div class="contato-item">
+                    <h2>Rede Social</h2>
+                    <p>
+                        <img src="img/contato-item.png" alt="Ícone do Instagram" class="icon"> @gecesa_
+                    </p>
+                </div>
             </div>
         </div>
-        <div>
-            <img src="img/enfermeira03.png" alt="Enfermeira Aplicando Insulina" width="250">
-        </div>
-    </div>
+    </section>
 
-    <!-- Terceira seção -->
-    <div class="third-section">
-        <h2>De onde surgiu a Camila Chatbot?</h2>
-        <p>Lorem ipsum dolor sit amet...</p>
-    </div>
 
-    <!-- Rodapé -->
-    <footer class="footer">
+
+    <footer>
         <div class="footer-content">
-            <h3>Contato</h3>
-            <p>email@gmail.com</p>
-            <p>UNILAB 2024</p>
-        </div>
-        <div class="footer-logo">
-            <img src="img/LOGOUnilab.png" alt="Logo">
+            <p>© 2024 Grupo de Estudos em Cuidados de Enfermagem na Saúde do Adulto</p>
         </div>
     </footer>
 
-    <!-- Ícone do Chatbot -->
+     <!-- Ícone do Chatbot -->
     <div class="chat-icon">
         <div class="chat-button-container">
             <div class="chat-button-wrapper">
@@ -93,6 +201,7 @@
             </button>
         </div>
     </div>
+    
     <!-- Incluindo o arquivo script.js -->
     <script type="module" src="js/script.js"></script>
 </body>
