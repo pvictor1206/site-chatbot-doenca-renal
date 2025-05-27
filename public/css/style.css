@@ -419,14 +419,13 @@ footer {
 
 /* Estilos do ícone do chatbot */
 .chat-icon {
-    position: fixed;
-    right: 100px;
-    bottom: 80px;
+    position: fixed !important;
+    right: 100px !important;
+    bottom: 80px !important;
     display: flex;
     align-items: center;
     gap: 10px;
-    transform: scale(1.4);
-    z-index: 9999; /* <- garante que fique por cima */
+    z-index: 9999 !important; /* garante sobreposição */
 }
 
 .chat-button-container {
@@ -445,11 +444,11 @@ footer {
 .chat-button {
     background-color: #337AB7;
     color: white;
-    padding: 10px 20px;
+    padding: 14px 28px; /* aumento proporcional */
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 22px; /* aumento proporcional */
     display: flex;
     align-items: center;
     position: relative;
@@ -463,29 +462,29 @@ footer {
 .chat-button-arrow-right {
     position: absolute;
     top: 50%;
-    right: -15px;
+    right: -20px; /* ligeiro aumento */
     width: 0;
     height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid #337AB7;
+    border-top: 14px solid transparent; /* aumento proporcional */
+    border-bottom: 14px solid transparent;
+    border-left: 20px solid #337AB7;
     transform: translateY(-50%);
 }
 
 .chat-icon-wrapper {
+    width: 168px;  /* 120px * 1.4 */
+    height: 245px; /* 175px * 1.4 */
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 120px;
-    height: 175px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.3); /* Fundo transparente */
-    cursor: pointer;
 }
 
 .chat-icon-image {
-    width: 180px;
-    height: 165px;
+    width: 252px; /* 180px * 1.4 */
+    height: 231px; /* 165px * 1.4 */
     border-radius: 50%;
 }
 
@@ -493,7 +492,7 @@ footer {
 .chat-window {
     position: fixed;
     right: 20px;
-    bottom: 100px;
+    bottom: 140px; /* sobe para ficar acima do botão maior */
     width: 400px;
     height: 500px;
     background-color: #ffffff;
@@ -503,6 +502,7 @@ footer {
     flex-direction: column;
     overflow: hidden;
     transition: height 0.3s ease, width 0.3s ease;
+    z-index: 10000;
 }
 
 .chat-window.expanded {
