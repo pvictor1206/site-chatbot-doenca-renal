@@ -308,7 +308,7 @@ footer {
     height: auto;
     clip-path: inset(0 0 25% 0); /* Corta imagem */
     position: absolute;
-    bottom: -1217px;
+    bottom: -1813px;
     transform: translateX(-250px); /* Move a imagem 50px para a esquerda */
 }
 
