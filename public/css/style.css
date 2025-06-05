@@ -670,3 +670,59 @@ footer {
    
 }
 
+
+
+
+/* NEW CHAT */
+
+.toggle-subjects-container {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+}
+
+#toggle-subjects-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #4a90e2;
+}
+
+.subjects-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.subject-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.subject-btn:hover {
+    background-color: #357ABD;
+}
+
+
+
+
+
+.tool-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+.tool-button:focus {
+    outline: none;
+}

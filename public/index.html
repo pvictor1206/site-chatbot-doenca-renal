@@ -57,64 +57,28 @@
 
         <section class="class-ferramentas">
             <div class="text-ferramentas">
-                <h2>Conheça sobre a Doença Renal Crônia</h2>
+                <h2>Conheça sobre a Doença Renal Crônica</h2>
             </div>
-            <div class="icons-container">
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Informações sobre saúde">
-                    <p>Doença Renal Crônica</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Calculadora de ingestão diária de água">
-                    <p>Hemodiálise</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="IMC">
-                    <p>Alimentação</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Contagem de calorias">
-                    <p>Cateter de Hemodiálise</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Medição de risco cardiovascular">
-                    <p>Fístula Arteriovenosa</p>
-                </div>
-                </div>
-                
-                <div class="icons-container">
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Informações sobre saúde">
-                    <p>Líquidos</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Calculadora de ingestão diária de água">
-                    <p>Peso</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="IMC">
-                    <p>Medicações</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Contagem de calorias">
-                    <p>Cateter de Hemodiálise</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Medição de risco cardiovascular">
-                    <p>Dicas para o consumo de líquidos</p>
-                </div>
 
-                <div class="icons-container">
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Informações sobre saúde">
-                    <p>Calcule seu peso</p>
-                </div>
-                <div class="tool">
-                    <img src="img/icone1.png" alt="Calculadora de ingestão diária de água">
-                    <p>Curiosidades</p>
-                </div>
-                </div>
-                
+            <div class="icons-container">
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Doença Renal Crônica</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Hemodiálise</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Alimentação</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Cateter de Hemodiálise</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Fístula Arteriovenosa</p></div></button>
+            </div>
+
+            <div class="icons-container">
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Líquidos</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Peso</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Medicações</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Cateter de Hemodiálise</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Dicas para o consumo de líquidos</p></div></button>
+            </div>
+
+            <div class="icons-container">
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Calcule seu peso</p></div></button>
+                <button class="tool-button"><div class="tool"><img src="img/icone1.png"><p>Curiosidades</p></div></button>
             </div>
         </section>
 
@@ -223,9 +187,31 @@
         <div class="chat-body" id="chat-body">
             <div class="chat-message">
                 Olá, sou um robô virtual com a finalidade de oferecer orientações as pessoas em hemodiálise sobre cuidados diários e bem-estar, então vamos lá! Como você prefere chamado? 
-
             </div>
         </div>
+
+        <!-- Botão seta para mostrar/ocultar assuntos -->
+        <div class="toggle-subjects-container">
+            <button id="toggle-subjects-btn" aria-label="Mostrar assuntos">
+                <i class="fas fa-chevron-up" id="toggle-subjects-icon"></i>
+            </button>
+        </div>
+
+        <div id="subjects-container" class="subjects-container" style="display: none;">
+            <button class="subject-btn">Doença Renal Crônica</button>
+            <button class="subject-btn">Hemodiálise</button>
+            <button class="subject-btn">Alimentação</button>
+            <button class="subject-btn">Cateter de Hemodiálise</button>
+            <button class="subject-btn">Fístula Arteriovenosa</button>
+            <button class="subject-btn">Líquidos</button>
+            <button class="subject-btn">Peso</button>
+            <button class="subject-btn">Medicações</button>
+            <button class="subject-btn">Cateter de Hemodiálise</button>
+            <button class="subject-btn">Dicas para o consumo de líquidos</button>
+            <button class="subject-btn">Calcule seu peso</button>
+            <button class="subject-btn">Curiosidades</button>
+        </div>
+
         <div class="chat-input-container">
             <input type="text" id="chat-input" placeholder="Digite sua mensagem..." class="chat-input" onkeydown="handleUserInput(event)">
             <button class="send-button" onclick="sendMessage()">
@@ -235,7 +221,6 @@
                 <i class="fas fa-microphone"></i>
             </button>
         </div>
-    </div>
     
     <!-- Incluindo o arquivo script.js -->
     <script type="module" src="js/script.js"></script>

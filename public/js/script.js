@@ -249,3 +249,41 @@ window.decreaseChatFontSize = function decreaseChatFontSize() {
         message.style.fontSize = newFontSize;
     });
 };
+
+
+
+// Controle de mostrar/ocultar os botões de assuntos
+const toggleSubjectsBtn = document.getElementById('toggle-subjects-btn');
+const subjectsContainer = document.getElementById('subjects-container');
+const toggleIcon = document.getElementById('toggle-subjects-icon');
+
+toggleSubjectsBtn.addEventListener('click', () => {
+    if (subjectsContainer.style.display === 'none' || subjectsContainer.style.display === '') {
+        subjectsContainer.style.display = 'flex';
+        toggleIcon.classList.remove('fa-chevron-up');
+        toggleIcon.classList.add('fa-chevron-down');
+    } else {
+        subjectsContainer.style.display = 'none';
+        toggleIcon.classList.remove('fa-chevron-down');
+        toggleIcon.classList.add('fa-chevron-up');
+    }
+});
+
+// Adiciona evento para cada botão de assunto para enviar a mensagem ao chat
+document.querySelectorAll('.subject-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const assunto = button.textContent;
+        addUserMessage(assunto);
+        processUserMessage(assunto);
+    });
+});
+
+
+document.querySelectorAll('.tool-button').forEach(button => {
+    button.addEventListener('click', () => {
+        const label = button.querySelector('p').textContent;
+        toggleChat(); // Abre o chat se estiver fechado
+        addUserMessage(label); // Adiciona mensagem como se fosse o usuário
+        processUserMessage(label); // Processa a mensagem
+    });
+});
