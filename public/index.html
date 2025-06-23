@@ -177,6 +177,7 @@
             <span class="chat-title">Camila</span>
             <button class="font-button" onclick="increaseChatFontSize()">A+</button>
             <button class="font-button" onclick="decreaseChatFontSize()">A-</button>
+            <button class="calc-button" onclick="openCalcModal()">Cálculo</button>
             <button class="expand-button" onclick="toggleExpandChat()">
                 <i class="fas fa-expand"></i>
             </button>
@@ -184,6 +185,7 @@
                 <i class="fas fa-minus"></i>
             </button>
         </div>
+
         <div class="chat-body" id="chat-body">
             <div class="chat-message">
                 Olá, sou um robô virtual com a finalidade de oferecer orientações as pessoas em hemodiálise sobre cuidados diários e bem-estar, então vamos lá! Como você prefere chamado? 
@@ -221,6 +223,23 @@
                 <i class="fas fa-microphone"></i>
             </button>
         </div>
+    </div>
+
+    <!-- Modal para seleção de tipo de cálculo (fora do chat-window) -->
+    <div id="calc-modal" class="modal" style="display:none">
+        <div class="modal-content">
+            <span class="close" onclick="closeCalcModal()">&times;</span>
+            <h3>Qual tipo de cálculo você deseja fazer?</h3>
+            <button onclick="showWeightCalc()">Ganho de peso entre sessões</button>
+
+            <div id="weight-calc" style="margin-top: 20px; display: none;">
+                <label for="peso-seco">Informe o peso seco (Kg):</label>
+                <input type="number" id="peso-seco" placeholder="Ex: 55">
+                <button onclick="calcularPesoMaximo()">Calcular</button>
+                <div id="resultado-calculo" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
     
     <!-- Incluindo o arquivo script.js -->
     <script type="module" src="js/script.js"></script>

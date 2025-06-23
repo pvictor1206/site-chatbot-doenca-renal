@@ -287,3 +287,32 @@ document.querySelectorAll('.tool-button').forEach(button => {
         processUserMessage(label); // Processa a mensagem
     });
 });
+
+
+
+// Abrir/Fechar modal
+window.openCalcModal = function () {
+    document.getElementById('calc-modal').style.display = 'block';
+};
+
+window.closeCalcModal = function () {
+    document.getElementById('calc-modal').style.display = 'none';
+    document.getElementById('weight-calc').style.display = 'none';
+    document.getElementById('resultado-calculo').innerText = '';
+};
+
+window.showWeightCalc = function () {
+    document.getElementById('weight-calc').style.display = 'block';
+};
+
+window.calcularPesoMaximo = function () {
+    const pesoSeco = parseFloat(document.getElementById('peso-seco').value);
+    const resultadoEl = document.getElementById('resultado-calculo');
+
+    if (!isNaN(pesoSeco) && pesoSeco > 0) {
+        const resultado = (pesoSeco * 3) / 100;
+        resultadoEl.innerText = `Você pode ganhar no máximo ${resultado.toFixed(2)} Kg entre as sessões.`;
+    } else {
+        resultadoEl.innerText = 'Por favor, insira um valor válido para o peso seco.';
+    }
+};
