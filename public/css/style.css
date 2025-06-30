@@ -759,3 +759,17 @@ footer {
     border-radius: 4px;
     cursor: pointer;
 }
+
+
+
+
+
+
+#stop-button {
+    background-color: #dc3545; /* vermelho */
+    color: white;
+}
+
+#stop-button:hover {
+    background-color: #a71d2a;
+}

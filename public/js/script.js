@@ -129,6 +129,7 @@ function addUserMessage(message) {
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
+
 // Função para iniciar a gravação de áudio
 window.startRecording = function startRecording() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -154,7 +155,7 @@ window.startRecording = function startRecording() {
                 const audio = new Audio(audioUrl);
                 audio.play();
 
-                // Processar o áudio com o Google Cloud Speech-to-Text
+                // Processar o áudio
                 transcribeAudio(audioBlob);
             });
 
@@ -167,46 +168,33 @@ window.startRecording = function startRecording() {
         });
 };
 
-// Função para transcrever o áudio
+
+
+// Função para transcrever o áudio usando Whisper API (Hugging Face)
 async function transcribeAudio(audioBlob) {
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(audioBlob);
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'audio.wav');
 
-    reader.onloadend = async () => {
-        const audioBytes = reader.result;
+    const response = await fetch("https://api-inference.huggingface.co/models/openai/whisper-large", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer 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", // ID
+        },
+        body: formData,
+    });
 
-        const audio = {
-            content: btoa(String.fromCharCode(...new Uint8Array(audioBytes))),
-        };
+    if (!response.ok) {
+        console.error('Erro na transcrição:', await response.text());
+        return;
+    }
 
-        const config = {
-            encoding: 'LINEAR16',
-            sampleRateHertz: 16000,
-            languageCode: 'pt-BR',
-        };
+    const result = await response.json();
+    const transcription = result.text;
 
-        const request = {
-            audio: audio,
-            config: config,
-        };
-
-        const response = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=YOUR_API_KEY', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(request),
-        });
-
-        const result = await response.json();
-        const transcription = result.results
-            .map(result => result.alternatives[0].transcript)
-            .join('\n');
-
-        addUserMessage(transcription);
-        processUserMessage(transcription.toLowerCase());
-    };
+    addUserMessage(transcription);
+    processUserMessage(transcription.toLowerCase());
 }
+
 
 // Função para aumentar o tamanho da fonte do chat
 window.increaseChatFontSize = function increaseChatFontSize() {
@@ -314,5 +302,55 @@ window.calcularPesoMaximo = function () {
         resultadoEl.innerText = `Você pode ganhar no máximo ${resultado.toFixed(2)} Kg entre as sessões.`;
     } else {
         resultadoEl.innerText = 'Por favor, insira um valor válido para o peso seco.';
+    }
+};
+
+
+// Parar gravação
+let mediaRecorder;
+let audioChunks = [];
+
+window.startRecording = function startRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error('getUserMedia not supported on your browser!');
+        return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+
+                // Oculta botão de parar após finalização
+                document.getElementById('stop-button').style.display = 'none';
+
+                // Transcrição
+                transcribeAudio(audioBlob);
+            };
+
+            mediaRecorder.start();
+            document.getElementById('stop-button').style.display = 'inline-block';
+
+            console.log('Gravação iniciada...');
+        })
+        .catch(error => {
+            console.error('Erro ao acessar microfone:', error);
+        });
+};
+
+window.stopRecording = function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+        console.log('Gravação parada manualmente.');
     }
 };
