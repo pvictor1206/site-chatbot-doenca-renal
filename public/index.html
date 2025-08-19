@@ -171,7 +171,7 @@
         </div>
     </div>
 
-    <!-- Janela do Chat -->
+     <!-- Janela do Chat -->
     <div id="chat-window" class="chat-window">
         <div class="chat-header">
             <span class="chat-title">Camila</span>
@@ -212,6 +212,7 @@
             <button class="subject-btn">Dicas para o consumo de líquidos</button>
             <button class="subject-btn">Calcule seu peso</button>
             <button class="subject-btn">Curiosidades</button>
+            <!-- ... botoes de assuntos ... -->
         </div>
 
         <div class="chat-input-container">
@@ -222,15 +223,27 @@
             <button class="audio-button" onclick="startRecording()">
                 <i class="fas fa-microphone"></i>
             </button>
-            
-            <!-- Parar gravação (10s) -->
             <button id="stop-button" class="audio-button" onclick="stopRecording()" style="display: none;">
                 <i class="fas fa-stop"></i>
             </button>
         </div>
+
+        <!-- Indicador de gravação -->
+        <div id="recording-indicator" style="display: none; justify-content: center; margin: 10px auto;">
+            <div style="width: 20px; height: 20px; border-radius: 50%; background: red; animation: pulse 1s infinite;"></div>
+            <span id="countdown-timer" style="margin-left: 10px; font-weight: bold; color: red;"></span>
+        </div>
     </div>
 
-    <!-- Modal para seleção de tipo de cálculo (fora do chat-window) -->
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+
+    <!-- Modal para cálculo -->
     <div id="calc-modal" class="modal" style="display:none">
         <div class="modal-content">
             <span class="close" onclick="closeCalcModal()">&times;</span>
@@ -245,8 +258,7 @@
             </div>
         </div>
     </div>
-    
-    <!-- Incluindo o arquivo script.js -->
+
     <script type="module" src="js/script.js"></script>
 </body>
 </html>
