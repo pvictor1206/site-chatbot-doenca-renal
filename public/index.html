@@ -243,21 +243,48 @@
         }
     </style>
 
-    <!-- Modal para cálculo -->
-    <div id="calc-modal" class="modal" style="display:none">
-        <div class="modal-content">
-            <span class="close" onclick="closeCalcModal()">&times;</span>
-            <h3>Qual tipo de cálculo você deseja fazer?</h3>
-            <button onclick="showWeightCalc()">Ganho de peso entre sessões</button>
+    <!-- Botão de exemplo para abrir o modal -->
+    <button class="calc-launch" onclick="openCalcModal()">Abrir calculadoras</button>
 
-            <div id="weight-calc" style="margin-top: 20px; display: none;">
-                <label for="peso-seco">Informe o peso seco (Kg):</label>
-                <input type="number" id="peso-seco" placeholder="Ex: 55">
-                <button onclick="calcularPesoMaximo()">Calcular</button>
-                <div id="resultado-calculo" style="margin-top: 10px;"></div>
-            </div>
+    <!-- Backdrop -->
+    <div id="calc-backdrop" class="modal-backdrop" style="display:none"></div>
+
+    <!-- Modal -->
+    <div id="calc-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="calc-title" style="display:none">
+    <div class="modal-content">
+        <button class="icon-btn close" aria-label="Fechar" onclick="closeCalcModal()">×</button>
+
+        <!-- VIEW: MENU -->
+        <div id="calc-view-menu">
+        <h3 id="calc-title">Qual tipo de cálculo você deseja fazer?</h3>
+
+        <div class="calc-grid">
+            <button class="calc-type" onclick="showCalc('weight')">
+            Ganho de peso entre sessões
+            </button>
+            <!-- Exemplo de espaço para futuras calculadoras:
+            <button class="calc-type" onclick="showCalc('outra')">Outra calculadora</button>
+            -->
+        </div>
+        </div>
+
+        <!-- VIEW: PESO ENTRE SESSÕES -->
+        <div id="calc-view-weight" class="calc-view" style="display:none">
+        <div class="view-header">
+            <button class="btn ghost" onclick="goBackToMenu()">← Voltar</button>
+            <h3>Ganho de peso entre sessões</h3>
+        </div>
+
+        <label for="peso-seco" class="field-label">Informe o peso seco (Kg)</label>
+        <input type="number" id="peso-seco" class="field-input" placeholder="Ex: 55" inputmode="decimal" min="0" step="0.01"/>
+
+        <button class="btn primary" onclick="calcularPesoMaximo()">Calcular</button>
+
+        <p id="resultado-calculo" class="result" aria-live="polite"></p>
         </div>
     </div>
+    </div>
+
 
     <script type="module" src="js/script.js"></script>
 </body>

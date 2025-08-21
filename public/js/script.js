@@ -251,28 +251,78 @@ document.querySelectorAll('.tool-button').forEach(button => {
     });
 });
 
-window.openCalcModal = function () {
-    document.getElementById('calc-modal').style.display = 'block';
-};
 
-window.closeCalcModal = function () {
-    document.getElementById('calc-modal').style.display = 'none';
-    document.getElementById('weight-calc').style.display = 'none';
-    document.getElementById('resultado-calculo').innerText = '';
-};
 
-window.showWeightCalc = function () {
-    document.getElementById('weight-calc').style.display = 'block';
-};
+const modalEl      = document.getElementById('calc-modal');
+  const backdropEl   = document.getElementById('calc-backdrop');
+  const viewMenu     = document.getElementById('calc-view-menu');
+  const viewWeight   = document.getElementById('calc-view-weight');
+  const inputPeso    = document.getElementById('peso-seco');
+  const resultEl     = document.getElementById('resultado-calculo');
 
-window.calcularPesoMaximo = function () {
-    const pesoSeco = parseFloat(document.getElementById('peso-seco').value);
-    const resultadoEl = document.getElementById('resultado-calculo');
+  function openCalcModal(){
+    modalEl.style.display = 'grid';
+    backdropEl.style.display = 'block';
+    // estado inicial sempre no menu
+    showView('menu');
+    // foco para acessibilidade
+    setTimeout(() => modalEl.querySelector('h3, .calc-type')?.focus(), 0);
+    // esc para fechar
+    document.addEventListener('keydown', onEscClose);
+  }
 
-    if (!isNaN(pesoSeco) && pesoSeco > 0) {
-        const resultado = (pesoSeco * 3) / 100;
-        resultadoEl.innerText = `Você pode ganhar no máximo ${resultado.toFixed(2)} Kg entre as sessões.`;
-    } else {
-        resultadoEl.innerText = 'Por favor, insira um valor válido para o peso seco.';
+  function closeCalcModal(){
+    modalEl.style.display = 'none';
+    backdropEl.style.display = 'none';
+    clearFields();
+    document.removeEventListener('keydown', onEscClose);
+  }
+
+  function onEscClose(e){
+    if(e.key === 'Escape') closeCalcModal();
+  }
+
+  // fecha ao clicar fora
+  backdropEl.addEventListener('click', closeCalcModal);
+
+  function clearFields(){
+    inputPeso.value = '';
+    resultEl.textContent = '';
+  }
+
+  function showView(which){
+    // esconde tudo
+    viewMenu.style.display   = 'none';
+    viewWeight.style.display = 'none';
+
+    if(which === 'menu'){
+      viewMenu.style.display = 'block';
+    }else if(which === 'weight'){
+      viewWeight.style.display = 'block';
+      inputPeso.focus();
     }
-};
+  }
+
+  // API pública usada no HTML
+  window.showCalc = function(kind){
+    if(kind === 'weight') showView('weight');
+    // future: else if(kind === 'outra') showView('outra');
+  }
+
+  window.goBackToMenu = function(){
+    clearFields();
+    showView('menu');
+  }
+
+  window.openCalcModal = openCalcModal;
+  window.closeCalcModal = closeCalcModal;
+
+  window.calcularPesoMaximo = function () {
+    const pesoSeco = parseFloat(inputPeso.value);
+    if (!isNaN(pesoSeco) && pesoSeco > 0) {
+      const resultado = (pesoSeco * 3) / 100;
+      resultEl.textContent = `Você pode ganhar no máximo ${resultado.toFixed(2)} kg entre as sessões.`;
+    } else {
+      resultEl.textContent = 'Por favor, insira um valor válido para o peso seco.';
+    }
+  };
