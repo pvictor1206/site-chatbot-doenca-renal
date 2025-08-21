@@ -44,7 +44,7 @@ nav a {
 
 .intro .character-container {
     position: absolute;
-    bottom: -540px;
+    bottom: -500px;
     left: 18%;
     z-index: 10;
     transform: scaleX(-1);
@@ -53,7 +53,7 @@ nav a {
 .intro .character-container img {
     max-width: 400px;
     height: auto;
-    transform: scale(0.9);
+    transform: scale(0.75);
 }
 
 .intro img.character {
@@ -304,12 +304,12 @@ footer {
 }
 
 .image-container-julia img {
-    max-width: 180px; /* Ajuste conforme necessário */
+    max-width: 150px; /* Ajuste conforme necessário */
     height: auto;
     clip-path: inset(0 0 25% 0); /* Corta imagem */
     position: absolute;
-    bottom: -1758px;
-    transform: translateX(-250px); /* Move a imagem 50px para a esquerda */
+    bottom: -1400px;
+    transform: translateX(-220px); /* Move a imagem 50px para a esquerda */
 }
 
 
