@@ -246,11 +246,12 @@ footer {
 
 /* -------------------------- */
 
+/* CONTAINER: duas colunas lado a lado, estável */
 .class-onde-surgiu-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 480px; /* texto | imagem */
+  align-items: stretch;
+  min-height: 420px; /* ajuste conforme seu design */
 }
 
 .row-container {
@@ -264,25 +265,24 @@ footer {
         }
 
 
+/* COLUNA ESQUERDA (texto) */
 .class-onde-surgiu {
-    padding: 20px 30px;
-    background-color: #d1dff4;
-    display: flex;
-    justify-content: center;
+  background-color: #d1dff4;
+  padding: 40px 48px;
+  display: flex;
+  align-items: center;   /* centraliza verticalmente o bloco de texto */
 }
 
+
+/* COLUNA DIREITA (imagem) */
 .class-onde-surgiu-lateral {
-    padding: 10.55% 20%;
-    background-color: #f1f3f7;
-    display: flex;
-    justify-content: center;
+  background-color: #f1f3f7;
+  display: flex;
+  padding: 24px;         /* padding proporcional e estável */
 }
 
 .content-onde-surgiu {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 100%;
+  max-width: 800px;      /* controla largura do texto */
 }
 
 .text-container-julia {
@@ -303,15 +303,49 @@ footer {
     color: #333;
 }
 
-.image-container-julia img {
-    max-width: 150px; /* Ajuste conforme necessário */
-    height: auto;
-    clip-path: inset(0 0 25% 0); /* Corta imagem */
-    position: absolute;
-    bottom: -1400px;
-    transform: translateX(-220px); /* Move a imagem 50px para a esquerda */
+.image-container-julia {
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end; /* encosta a imagem no “rodapé” da coluna */
+  justify-content: center;
+  width: 100%;
 }
 
+/* IMAGEM: sem absolute/translate */
+.image-container-julia img {
+  max-width: 120px;  /* ajuste de tamanho máximo */
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  /* Remova recortes e posições absolutas */
+  /* clip-path: none;  <-- use se realmente precisar recortar */
+}
+
+/* RESPONSIVO: empilha no mobile */
+@media (max-width: 1024px) {
+  .class-onde-surgiu-container {
+    grid-template-columns: 1fr 380px;
+  }
+  .image-container-julia img {
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .class-onde-surgiu-container {
+    grid-template-columns: 1fr;  /* empilha */
+  }
+  .class-onde-surgiu,
+  .class-onde-surgiu-lateral {
+    padding: 32px 24px;
+  }
+  .image-container-julia {
+    align-items: center; /* centraliza a imagem quando empilhar */
+  }
+  .image-container-julia img {
+    max-width: 260px;
+  }
+}
 
 /* -------------------------- */
 
