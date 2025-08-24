@@ -878,3 +878,35 @@ h3{margin:6px 0 14px; font-size:1.25rem}
   background:#fff; cursor:pointer;
 }
 .calc-launch:hover{box-shadow: 0 0 0 4px var(--ring)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.whatsapp-btn {
+  background-color: #25D366; /* cor oficial do WhatsApp */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 15px;
+  gap: 8px; /* espaço entre ícone e texto */
+}
+
+.whatsapp-btn:hover {
+  background-color: #1ebe5b; /* tom mais escuro ao passar o mouse */
+}
