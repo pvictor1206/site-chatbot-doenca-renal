@@ -1,43 +1,165 @@
-// script.js
+// script.js (sem áudio) — imagens locais + pergunta->imagem (sem fallback)
 
 import { db } from './firebase-init.js';
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-let mediaRecorder;
-let audioChunks = [];
-let countdownInterval;
+/* =========================================================
+   0) Normalização (usada em todo o fluxo e no mapa de perguntas)
+   ========================================================= */
+function normalizeText(text) {
+  return (text || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s]/gi, '')
+    .trim();
+}
 
+/* =========================================================
+   1) Mapa de ASSETS (imagens locais do projeto)
+   ========================================================= */
+const ASSETS = {
+  // ícones/figuras gerais
+  "bot/camila": "img/enfermeira02.png",
+  "logo/unilab": "img/logo-unilab.png",
+
+  // saúde renal (presentes no seu HTML)
+  "renal/drc": "img/renal.png",
+  "renal/hemodialise": "img/hemodialise.png",
+  "renal/alimentacao": "img/fruit.png",
+  "renal/cateter": "img/cateter.png",
+  "renal/fistula": "img/fistula.png",
+  "renal/liquidos": "img/liquido.png",
+  "renal/peso": "img/peso.png",
+  "renal/medicacoes": "img/medicamentos.png",
+
+  // extras
+  "tips/liquidos": "img/ideia-consumo.png",
+  "calc/peso": "img/calculo-pesp.png",
+  "curiosidades/icone": "img/icone1.png",
+  "drc/oque": "img/oq-DRC.png",
+  "drc/fatores": "img/fatores-DRC.png",
+};
+
+/* =========================================================
+   1.1) Mapa PERGUNTA -> IMAGENS (SEM fallback)
+   - Edite abaixo para amarrar perguntas a chaves do ASSETS
+   ========================================================= */
+const QUESTION_IMAGE_RAW = {
+  "o que e hemodialise?": ["renal/hemodialise"],
+  "me fale sobre hemodialise": ["renal/hemodialise"],
+  "o que e fistula arteriovenosa": ["renal/fistula"],
+  "o que e cateter de hemodialise": ["renal/cateter"],
+  "dicas para consumo de liquidos": ["renal/liquidos", "tips/liquidos"],
+  "qual a dieta/alimentacao na hemodialise": ["renal/alimentacao"],
+  "posso calcular meu peso": ["renal/peso", "calc/peso"],
+};
+
+// Normaliza as chaves do mapa acima
+const QUESTION_IMAGE_MAP = (() => {
+  const out = {};
+  for (const [q, imgs] of Object.entries(QUESTION_IMAGE_RAW)) {
+    out[normalizeText(q)] = imgs;
+  }
+  return out;
+})();
+
+/* =========================================================
+   1.2) Helpers de render
+   ========================================================= */
+function resolveAssetUrls(tokens = []) {
+  return tokens.flatMap(t => {
+    const key = t.startsWith("asset:") ? t.slice(6) : t; // aceita "asset:..." ou só a chave
+    const url = ASSETS[key];
+    if (!url) { console.warn(`[chat] imagem não mapeada: "${t}"`); return []; }
+    return [url];
+  });
+}
+
+function addBotMessageRich({ html = "", text = "", images = [], alts = [] }) {
+  const chat = document.getElementById('chat-body');
+  const wrap = document.createElement('div');
+  wrap.className = 'chat-message bot';
+
+  if (html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    wrap.appendChild(div);
+  } else if (text) {
+    const p = document.createElement('p');
+    p.textContent = text;
+    wrap.appendChild(p);
+  }
+
+  if (images.length > 0) {
+    const grid = document.createElement('div');
+    grid.className = 'img-grid';
+    images.forEach((url, idx) => {
+      const fig = document.createElement('figure');
+      fig.className = 'img-item';
+
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = (alts[idx] || "").toString();
+      img.loading = "lazy";
+      img.decoding = "async";
+
+      fig.appendChild(img);
+
+      if (alts[idx]) {
+        const cap = document.createElement('figcaption');
+        cap.textContent = alts[idx];
+        fig.appendChild(cap);
+      }
+
+      grid.appendChild(fig);
+    });
+    wrap.appendChild(grid);
+  }
+
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Compat: aceita só texto/HTML
+function addBotMessage(message) {
+  const looksHtml = /<\/?[a-z][\s\S]*>/i.test(message);
+  addBotMessageRich({ html: looksHtml ? message : "", text: looksHtml ? "" : message });
+}
+
+/* =========================================================
+   UI BÁSICA
+   ========================================================= */
 window.toggleChat = function toggleChat() {
-    const chatWindow = document.getElementById('chat-window');
-    chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'flex' : 'none';
+  const chatWindow = document.getElementById('chat-window');
+  chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'flex' : 'none';
 };
 
 window.toggleExpandChat = function toggleExpandChat() {
-    const chatWindow = document.getElementById('chat-window');
-    chatWindow.classList.toggle('expanded');
+  const chatWindow = document.getElementById('chat-window');
+  chatWindow.classList.toggle('expanded');
 };
 
 window.toggleMinimizeChat = function toggleMinimizeChat() {
-    const chatWindow = document.getElementById('chat-window');
-    chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'block' : 'none';
+  const chatWindow = document.getElementById('chat-window');
+  chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'block' : 'none';
 };
 
-// --- Helpers de parsing ---
+/* =========================================================
+   Helpers de parsing
+   ========================================================= */
 function looksLikeList(text) {
   return /(?:^|\n)\s*(?:•|-|\*|\d+\))/m.test(text);
 }
 
-// Junta quebras de linha que NÃO iniciam novo tópico (evita "fio\n dental")
 function joinSoftLineBreaks(text) {
   return text.replace(/\r\n/g, "\n")
              .replace(/\n(?!\s*(?:•|-|\*|\d+\)))/g, " ");
 }
 
-// Separa em intro (antes de ":") e tópicos (•, -, *, 1), etc.)
 function splitIntoTopics(raw) {
   const text = joinSoftLineBreaks(raw).trim();
 
-  // intro: tudo antes de ":" (ex.: "… como:")
   let intro = "";
   let body = text;
   const colonIdx = text.indexOf(":");
@@ -46,22 +168,16 @@ function splitIntoTopics(raw) {
     body  = text.slice(colonIdx + 1).trim();
   }
 
-  // normaliza marcadores equivalentes para "• "
   const normalized = body
     .replace(/(?:^|\n)\s*-\s*/g, "\n• ")
     .replace(/(?:^|\n)\s*\*\s*/g, "\n• ")
     .replace(/(?:^|\n)\s*\d+\)\s*/g, "\n• ")
     .replace(/(?:^|\n)\s*•\s*/g, "\n• ");
 
-  // quebra por linhas que começam com "• "
   const parts = normalized
-    .split(/\n•\s*/)
-    .map(s => s.trim())
-    .filter(Boolean);
+    .split(/\n•\s*/).map(s => s.trim()).filter(Boolean);
 
-  // tira pontuação final sobrando
   const topics = parts.map(t => t.replace(/[;,\s]+$/g, "").trim());
-
   return { intro, topics };
 }
 
@@ -71,26 +187,25 @@ function formatTopicsNumbered(intro, topics) {
   return introLine + list;
 }
 
-// --- Seu fluxo principal ---
+/* =========================================================
+   2) Fluxo principal — suporta imagens locais
+   ========================================================= */
 async function processUserMessage(message) {
   // 1) Se a mensagem "parece lista", já responde separado em tópicos
   if (looksLikeList(message)) {
     const { intro, topics } = splitIntoTopics(message);
-
     if (topics.length > 0) {
       const formatted = formatTopicsNumbered(intro, topics);
       addBotMessage(formatted);
-      return; // já respondeu, não precisa consultar o Firestore
+      return;
     }
-    // se por algum motivo não conseguiu extrair tópicos, cai pro fluxo antigo
   }
 
-  // 2) Fluxo antigo: buscar no Firestore por pergunta correspondente
+  // 2) Buscar no Firestore por pergunta correspondente
   const normalizedMessage = normalizeText(message);
   const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
   let foundResponse = false;
 
-  // for..of permite sair cedo com break
   for (const docSnap of querySnapshot.docs) {
     const data = docSnap.data();
     if (Array.isArray(data.perguntas)) {
@@ -99,7 +214,7 @@ async function processUserMessage(message) {
       );
       if (perguntaCorreta) {
         foundResponse = true;
-        handleResponse(docSnap, data);
+        await handleResponse(docSnap, data, message, perguntaCorreta);
         break;
       }
     }
@@ -110,286 +225,200 @@ async function processUserMessage(message) {
   }
 }
 
-async function handleResponse(doc, data) {
-    addBotMessage(data.resposta);
-    const hasExtraInfo = data.temExtraInfo && data.temExtraInfo.toLowerCase() === "sim";
+/* =========================================================
+   3) Render da resposta + botão "saiba mais" (se houver)
+   ========================================================= */
+async function handleResponse(doc, data, userMessage = "", perguntaCorreta = "") {
+  const text = data.resposta || "Desculpe, não encontrei detalhes.";
 
-    if (hasExtraInfo) {
-        const encaminhamento = data.respostaEncaminhada;
-        addExtraInfoButton(data.extraInfo, encaminhamento);
-    }
+  // 1) Se o Firestore já trouxe imagens, usa.
+  let keys = Array.isArray(data.imagens) ? data.imagens : [];
+
+  // 2) Senão, usa o mapeamento pergunta->imagens (sem fallback)
+  if (keys.length === 0) {
+    const normQ = normalizeText(perguntaCorreta || userMessage);
+    keys = QUESTION_IMAGE_MAP[normQ] || [];
+  }
+
+  const alts = Array.isArray(data.alts) ? data.alts : [];
+  const images = resolveAssetUrls(keys);
+
+  addBotMessageRich({ text, images, alts });
+
+  const hasExtraInfo = data.temExtraInfo && data.temExtraInfo.toLowerCase() === "sim";
+  if (hasExtraInfo) {
+    const encaminhamento = data.respostaEncaminhada;
+    addExtraInfoButton(data.extraInfo, encaminhamento);
+  }
 }
 
 function addExtraInfoButton(extraInfo, encaminhamento) {
-    const chatBody = document.getElementById('chat-body');
-    const extraButton = document.createElement('button');
-    extraButton.classList.add('read-more-button');
-    extraButton.textContent = extraInfo;
+  const chatBody = document.getElementById('chat-body');
+  const extraButton = document.createElement('button');
+  extraButton.classList.add('read-more-button');
+  extraButton.textContent = extraInfo;
 
-    extraButton.onclick = async () => {
-        const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
-        querySnapshot.forEach((docEnc) => {
-            const dataEnc = docEnc.data();
-            if (dataEnc.resposta === encaminhamento) {
-                handleResponse(docEnc, dataEnc);
-            }
-        });
-    };
+  extraButton.onclick = async () => {
+    const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
+    querySnapshot.forEach((docEnc) => {
+      const dataEnc = docEnc.data();
+      if (dataEnc.resposta === encaminhamento) {
+        handleResponse(docEnc, dataEnc);
+      }
+    });
+  };
 
-    chatBody.appendChild(extraButton);
-    chatBody.scrollTop = chatBody.scrollHeight;
+  chatBody.appendChild(extraButton);
+  chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-function addBotMessage(message) {
-    const chatBody = document.getElementById('chat-body');
-    const botMessage = document.createElement('div');
-    botMessage.classList.add('chat-message');
-    botMessage.innerHTML = message;
-    chatBody.appendChild(botMessage);
-    chatBody.scrollTop = chatBody.scrollHeight;
-}
-
-function normalizeText(text) {
-    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '').trim();
+/* =========================================================
+   Utilidades diversas
+   ========================================================= */
+function addUserMessage(message) {
+  const chatBody = document.getElementById('chat-body');
+  const userMessage = document.createElement('div');
+  userMessage.classList.add('chat-message', 'user');
+  userMessage.textContent = message;
+  chatBody.appendChild(userMessage);
+  chatBody.scrollTop = chatBody.scrollHeight;
 }
 
 window.handleUserInput = function handleUserInput(event) {
-    if (event.key === 'Enter') {
-        window.sendMessage();
-    }
+  if (event.key === 'Enter') window.sendMessage();
 };
 
 window.sendMessage = function sendMessage() {
-    const input = document.getElementById('chat-input');
-    const message = input.value.trim();
-
-    if (message) {
-        addUserMessage(message);
-        input.value = '';
-        processUserMessage(message);
-    }
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (message) {
+    addUserMessage(message);
+    input.value = '';
+    processUserMessage(message);
+  }
 };
 
-function addUserMessage(message) {
-    const chatBody = document.getElementById('chat-body');
-    const userMessage = document.createElement('div');
-    userMessage.classList.add('chat-message', 'user');
-    userMessage.textContent = message;
-    chatBody.appendChild(userMessage);
-    chatBody.scrollTop = chatBody.scrollHeight;
-}
-
-window.startRecording = function startRecording() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        console.error('getUserMedia not supported on your browser!');
-        return;
-    }
-
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            mediaRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-
-            let countdown = 5;
-            const timerElement = document.getElementById('countdown-timer');
-            timerElement.textContent = `00:0${countdown}`;
-
-            countdownInterval = setInterval(() => {
-                countdown--;
-                timerElement.textContent = `00:0${countdown}`;
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                }
-            }, 1000);
-
-            mediaRecorder.ondataavailable = event => {
-                audioChunks.push(event.data);
-            };
-
-            mediaRecorder.onstop = () => {
-                clearInterval(countdownInterval);
-                document.getElementById('stop-button').style.display = 'none';
-                document.getElementById('recording-indicator').style.display = 'none';
-
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const audio = new Audio(audioUrl);
-                audio.play();
-
-                transcribeAudio(audioBlob);
-            };
-
-            mediaRecorder.start();
-            document.getElementById('stop-button').style.display = 'inline-block';
-            document.getElementById('recording-indicator').style.display = 'flex';
-        })
-        .catch(error => {
-            console.error('Erro ao acessar microfone:', error);
-        });
+/* =========================================================
+   (Sem áudio) — esconder elementos e evitar erro dos onclicks no HTML
+   ========================================================= */
+window.startRecording = function () {
+  // Áudio desativado: apenas avisa (ou deixe vazio se preferir)
+  console.info('[chat] Função de áudio desativada.');
+};
+window.stopRecording = function () {
+  console.info('[chat] Função de áudio desativada.');
 };
 
-window.stopRecording = function stopRecording() {
-    if (mediaRecorder && mediaRecorder.state !== "inactive") {
-        clearInterval(countdownInterval);
-        mediaRecorder.stop();
-        document.getElementById('recording-indicator').style.display = 'none';
-        console.log('Gravação parada manualmente.');
-    }
-};
+// Esconde botões/indicador se existirem
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.audio-button').forEach(btn => {
+    btn.style.display = 'none';
+  });
+  const rec = document.getElementById('recording-indicator');
+  if (rec) rec.style.display = 'none';
+});
 
-async function transcribeAudio(audioBlob) {
-    const formData = new FormData();
-    formData.append('file', audioBlob, 'audio.wav');
-
-    const response = await fetch("https://api-inference.huggingface.co/models/openai/whisper-large", {
-        method: "POST",
-        headers: {
-            "Authorization": "Bearer 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",
-        },
-        body: formData,
-    });
-
-    if (!response.ok) {
-        console.error('Erro na transcrição:', await response.text());
-        return;
-    }
-
-    const result = await response.json();
-    const transcription = result.text;
-
-    addUserMessage(transcription);
-    processUserMessage(transcription.toLowerCase());
-}
-
-window.increaseChatFontSize = function increaseChatFontSize() {
-    const chatBody = document.getElementById('chat-body');
-    const currentFontSize = window.getComputedStyle(chatBody).fontSize;
-    const newFontSize = parseFloat(currentFontSize) + 2 + 'px';
-    chatBody.style.fontSize = newFontSize;
-
-    const messages = chatBody.querySelectorAll('.chat-message');
-    messages.forEach(message => {
-        message.style.fontSize = newFontSize;
-    });
-};
-
-window.decreaseChatFontSize = function decreaseChatFontSize() {
-    const chatBody = document.getElementById('chat-body');
-    const currentFontSize = window.getComputedStyle(chatBody).fontSize;
-    const newFontSize = parseFloat(currentFontSize) - 2 + 'px';
-    chatBody.style.fontSize = newFontSize;
-
-    const messages = chatBody.querySelectorAll('.chat-message');
-    messages.forEach(message => {
-        message.style.fontSize = newFontSize;
-    });
-};
-
+/* =========================================================
+   Botões de assuntos/atalhos
+   ========================================================= */
 const toggleSubjectsBtn = document.getElementById('toggle-subjects-btn');
 const subjectsContainer = document.getElementById('subjects-container');
 const toggleIcon = document.getElementById('toggle-subjects-icon');
 
 toggleSubjectsBtn.addEventListener('click', () => {
-    if (subjectsContainer.style.display === 'none' || subjectsContainer.style.display === '') {
-        subjectsContainer.style.display = 'flex';
-        toggleIcon.classList.remove('fa-chevron-up');
-        toggleIcon.classList.add('fa-chevron-down');
-    } else {
-        subjectsContainer.style.display = 'none';
-        toggleIcon.classList.remove('fa-chevron-down');
-        toggleIcon.classList.add('fa-chevron-up');
-    }
+  if (subjectsContainer.style.display === 'none' || subjectsContainer.style.display === '') {
+    subjectsContainer.style.display = 'flex';
+    toggleIcon.classList.remove('fa-chevron-up');
+    toggleIcon.classList.add('fa-chevron-down');
+  } else {
+    subjectsContainer.style.display = 'none';
+    toggleIcon.classList.remove('fa-chevron-down');
+    toggleIcon.classList.add('fa-chevron-up');
+  }
 });
 
 document.querySelectorAll('.subject-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const assunto = button.textContent;
-        addUserMessage(assunto);
-        processUserMessage(assunto);
-    });
+  button.addEventListener('click', () => {
+    const assunto = button.textContent;
+    addUserMessage(assunto);
+    processUserMessage(assunto);
+  });
 });
 
 document.querySelectorAll('.tool-button').forEach(button => {
-    button.addEventListener('click', () => {
-        const label = button.querySelector('p').textContent;
-        toggleChat();
-        addUserMessage(label);
-        processUserMessage(label);
-    });
+  button.addEventListener('click', () => {
+    const label = button.querySelector('p').textContent;
+    toggleChat();
+    addUserMessage(label);
+    processUserMessage(label);
+  });
 });
 
-
-
+/* =========================================================
+   Modal de cálculo
+   ========================================================= */
 const modalEl      = document.getElementById('calc-modal');
-  const backdropEl   = document.getElementById('calc-backdrop');
-  const viewMenu     = document.getElementById('calc-view-menu');
-  const viewWeight   = document.getElementById('calc-view-weight');
-  const inputPeso    = document.getElementById('peso-seco');
-  const resultEl     = document.getElementById('resultado-calculo');
+const backdropEl   = document.getElementById('calc-backdrop');
+const viewMenu     = document.getElementById('calc-view-menu');
+const viewWeight   = document.getElementById('calc-view-weight');
+const inputPeso    = document.getElementById('peso-seco');
+const resultEl     = document.getElementById('resultado-calculo');
 
-  function openCalcModal(){
-    modalEl.style.display = 'grid';
-    backdropEl.style.display = 'block';
-    // estado inicial sempre no menu
-    showView('menu');
-    // foco para acessibilidade
-    setTimeout(() => modalEl.querySelector('h3, .calc-type')?.focus(), 0);
-    // esc para fechar
-    document.addEventListener('keydown', onEscClose);
+function openCalcModal(){
+  modalEl.style.display = 'grid';
+  backdropEl.style.display = 'block';
+  showView('menu');
+  setTimeout(() => modalEl.querySelector('h3, .calc-type')?.focus(), 0);
+  document.addEventListener('keydown', onEscClose);
+}
+
+function closeCalcModal(){
+  modalEl.style.display = 'none';
+  backdropEl.style.display = 'none';
+  clearFields();
+  document.removeEventListener('keydown', onEscClose);
+}
+
+function onEscClose(e){
+  if(e.key === 'Escape') closeCalcModal();
+}
+
+backdropEl.addEventListener('click', closeCalcModal);
+
+function clearFields(){
+  inputPeso.value = '';
+  resultEl.textContent = '';
+}
+
+function showView(which){
+  viewMenu.style.display   = 'none';
+  viewWeight.style.display = 'none';
+  if(which === 'menu'){
+    viewMenu.style.display = 'block';
+  } else if(which === 'weight'){
+    viewWeight.style.display = 'block';
+    inputPeso.focus();
   }
+}
 
-  function closeCalcModal(){
-    modalEl.style.display = 'none';
-    backdropEl.style.display = 'none';
-    clearFields();
-    document.removeEventListener('keydown', onEscClose);
+window.showCalc = function(kind){
+  if(kind === 'weight') showView('weight');
+}
+
+window.goBackToMenu = function(){
+  clearFields();
+  showView('menu');
+}
+
+window.openCalcModal = openCalcModal;
+window.closeCalcModal = closeCalcModal;
+
+window.calcularPesoMaximo = function () {
+  const pesoSeco = parseFloat(inputPeso.value);
+  if (!isNaN(pesoSeco) && pesoSeco > 0) {
+    const resultado = (pesoSeco * 3) / 100;
+    resultEl.textContent = `Você pode ganhar no máximo ${resultado.toFixed(2)} kg entre as sessões.`;
+  } else {
+    resultEl.textContent = 'Por favor, insira um valor válido para o peso seco.';
   }
-
-  function onEscClose(e){
-    if(e.key === 'Escape') closeCalcModal();
-  }
-
-  // fecha ao clicar fora
-  backdropEl.addEventListener('click', closeCalcModal);
-
-  function clearFields(){
-    inputPeso.value = '';
-    resultEl.textContent = '';
-  }
-
-  function showView(which){
-    // esconde tudo
-    viewMenu.style.display   = 'none';
-    viewWeight.style.display = 'none';
-
-    if(which === 'menu'){
-      viewMenu.style.display = 'block';
-    }else if(which === 'weight'){
-      viewWeight.style.display = 'block';
-      inputPeso.focus();
-    }
-  }
-
-  // API pública usada no HTML
-  window.showCalc = function(kind){
-    if(kind === 'weight') showView('weight');
-    // future: else if(kind === 'outra') showView('outra');
-  }
-
-  window.goBackToMenu = function(){
-    clearFields();
-    showView('menu');
-  }
-
-  window.openCalcModal = openCalcModal;
-  window.closeCalcModal = closeCalcModal;
-
-  window.calcularPesoMaximo = function () {
-    const pesoSeco = parseFloat(inputPeso.value);
-    if (!isNaN(pesoSeco) && pesoSeco > 0) {
-      const resultado = (pesoSeco * 3) / 100;
-      resultEl.textContent = `Você pode ganhar no máximo ${resultado.toFixed(2)} kg entre as sessões.`;
-    } else {
-      resultEl.textContent = 'Por favor, insira um valor válido para o peso seco.';
-    }
-  };
+};
