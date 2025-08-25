@@ -22,25 +22,92 @@ window.toggleMinimizeChat = function toggleMinimizeChat() {
     chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'block' : 'none';
 };
 
+// --- Helpers de parsing ---
+function looksLikeList(text) {
+  return /(?:^|\n)\s*(?:•|-|\*|\d+\))/m.test(text);
+}
+
+// Junta quebras de linha que NÃO iniciam novo tópico (evita "fio\n dental")
+function joinSoftLineBreaks(text) {
+  return text.replace(/\r\n/g, "\n")
+             .replace(/\n(?!\s*(?:•|-|\*|\d+\)))/g, " ");
+}
+
+// Separa em intro (antes de ":") e tópicos (•, -, *, 1), etc.)
+function splitIntoTopics(raw) {
+  const text = joinSoftLineBreaks(raw).trim();
+
+  // intro: tudo antes de ":" (ex.: "… como:")
+  let intro = "";
+  let body = text;
+  const colonIdx = text.indexOf(":");
+  if (colonIdx !== -1 && colonIdx < text.length - 1) {
+    intro = text.slice(0, colonIdx + 1).trim();
+    body  = text.slice(colonIdx + 1).trim();
+  }
+
+  // normaliza marcadores equivalentes para "• "
+  const normalized = body
+    .replace(/(?:^|\n)\s*-\s*/g, "\n• ")
+    .replace(/(?:^|\n)\s*\*\s*/g, "\n• ")
+    .replace(/(?:^|\n)\s*\d+\)\s*/g, "\n• ")
+    .replace(/(?:^|\n)\s*•\s*/g, "\n• ");
+
+  // quebra por linhas que começam com "• "
+  const parts = normalized
+    .split(/\n•\s*/)
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  // tira pontuação final sobrando
+  const topics = parts.map(t => t.replace(/[;,\s]+$/g, "").trim());
+
+  return { intro, topics };
+}
+
+function formatTopicsNumbered(intro, topics) {
+  const introLine = intro ? `${intro}\n\n` : "";
+  const list = topics.map((t, i) => `${i + 1}. ${t}`).join("\n");
+  return introLine + list;
+}
+
+// --- Seu fluxo principal ---
 async function processUserMessage(message) {
-    const normalizedMessage = normalizeText(message);
-    const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
-    let foundResponse = false;
+  // 1) Se a mensagem "parece lista", já responde separado em tópicos
+  if (looksLikeList(message)) {
+    const { intro, topics } = splitIntoTopics(message);
 
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (Array.isArray(data.perguntas)) {
-            const perguntaCorreta = data.perguntas.find(pergunta => normalizeText(pergunta).includes(normalizedMessage));
-            if (perguntaCorreta) {
-                foundResponse = true;
-                handleResponse(doc, data);
-            }
-        }
-    });
-
-    if (!foundResponse) {
-        addBotMessage("Desculpe, ainda estou aprendendo. Você pode perguntar algo sobre saúde.");
+    if (topics.length > 0) {
+      const formatted = formatTopicsNumbered(intro, topics);
+      addBotMessage(formatted);
+      return; // já respondeu, não precisa consultar o Firestore
     }
+    // se por algum motivo não conseguiu extrair tópicos, cai pro fluxo antigo
+  }
+
+  // 2) Fluxo antigo: buscar no Firestore por pergunta correspondente
+  const normalizedMessage = normalizeText(message);
+  const querySnapshot = await getDocs(collection(db, "tabelaRespostas"));
+  let foundResponse = false;
+
+  // for..of permite sair cedo com break
+  for (const docSnap of querySnapshot.docs) {
+    const data = docSnap.data();
+    if (Array.isArray(data.perguntas)) {
+      const perguntaCorreta = data.perguntas.find(pergunta =>
+        normalizeText(pergunta).includes(normalizedMessage)
+      );
+      if (perguntaCorreta) {
+        foundResponse = true;
+        handleResponse(docSnap, data);
+        break;
+      }
+    }
+  }
+
+  if (!foundResponse) {
+    addBotMessage("Desculpe, ainda estou aprendendo. Você pode perguntar algo sobre saúde.");
+  }
 }
 
 async function handleResponse(doc, data) {
