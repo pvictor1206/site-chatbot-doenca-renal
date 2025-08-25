@@ -124,6 +124,7 @@ function addBotMessageRich({ html = "", text = "", images = [], alts = [], video
   const wrap = document.createElement('div');
   wrap.className = 'chat-message bot';
 
+  // Texto/HTML
   if (html) {
     const div = document.createElement('div');
     div.innerHTML = html;
@@ -134,6 +135,7 @@ function addBotMessageRich({ html = "", text = "", images = [], alts = [], video
     wrap.appendChild(p);
   }
 
+  // Imagens
   if (images.length > 0) {
     const grid = document.createElement('div');
     grid.className = 'img-grid';
@@ -160,36 +162,33 @@ function addBotMessageRich({ html = "", text = "", images = [], alts = [], video
     wrap.appendChild(grid);
   }
 
+  // Vídeos (grandes, responsivos)
   if (videos.length > 0) {
-    const vgrid = document.createElement('div');
-    vgrid.className = 'video-grid';
+    const vlist = document.createElement('div');
+    vlist.className = 'video-list';
 
     videos.forEach(embedUrl => {
-      const card = document.createElement('div');
-      card.className = 'video-card';
-
-      const frameWrap = document.createElement('div');
-      frameWrap.className = 'video-frame';
+      const vw = document.createElement('div');   // wrapper 16:9
+      vw.className = 'video-wrapper';
 
       const iframe = document.createElement('iframe');
       iframe.src = embedUrl;
       iframe.title = "Vídeo educativo";
       iframe.loading = "lazy";
-      iframe.allow =
-        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-      iframe.allowFullscreen = true;
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.setAttribute('allowfullscreen', '');
 
-      frameWrap.appendChild(iframe);
-      card.appendChild(frameWrap);
-      vgrid.appendChild(card);
+      vw.appendChild(iframe);
+      vlist.appendChild(vw);
     });
 
-    wrap.appendChild(vgrid);
+    wrap.appendChild(vlist);
   }
 
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
 }
+
 
 // Compat: aceita só texto/HTML
 function addBotMessage(message) {

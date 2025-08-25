@@ -920,7 +920,7 @@ h3{margin:6px 0 14px; font-size:1.25rem}
 
 
 /* bolha do bot */
-.chat-message.bot{background:#f6f7fb;border-radius:12px;padding:10px 12px;margin:8px 0}
+.chat-message.bot{background:#337AB7;border-radius:12px;padding:10px 12px;margin:8px 0}
 
 /* imagens */
 .img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:8px}
@@ -928,14 +928,45 @@ h3{margin:6px 0 14px; font-size:1.25rem}
 .img-item img{width:100%;height:110px;object-fit:cover;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .img-item figcaption{font-size:12px;color:#555;margin-top:4px}
 
-/* vídeos */
-.video-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
-@media (min-width:640px){.video-grid{grid-template-columns:1fr 1fr}}
-.video-card{background:#fff;border:1px solid #ececec;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);overflow:hidden}
-.video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
-.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
 
 
 
+
+
+/* ======= Vídeos no chat: ocupar a largura da bolha ======= */
+.chat-body .chat-message.bot .video-list{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.chat-body .chat-message.bot .video-wrapper{
+  position: relative;
+  width: 100%;          /* pega 100% da largura da bolha */
+  aspect-ratio: 16/9;   /* mantém 16:9 */
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,.12);
+}
+
+/* força o iframe a preencher o wrapper, mesmo que exista algum CSS antigo conflitando */
+.chat-body .chat-message.bot .video-wrapper iframe{
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+  display: block;
+}
+
+/* em telas médias+, você pode querer 2 vídeos lado a lado; se só tiver 1, ele fica 100% */
+@media (min-width: 640px){
+  .chat-body .chat-message.bot .video-list{
+    grid-template-columns: 1fr; /* mude para 1fr 1fr se quiser dois por linha */
+  }
+}
 
