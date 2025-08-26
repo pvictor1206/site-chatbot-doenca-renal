@@ -19,38 +19,38 @@ function normalizeText(text) {
    1) Mapa de ASSETS (imagens locais do projeto)
    ========================================================= */
 const ASSETS = {
-  "bot/camila": "img/enfermeira02.png",
-  "logo/unilab": "img/logo-unilab.png",
+  "bot/camila": "../img/renal.png",
+  "logo/unilab": "../img/renal.png",
 
   // saúde renal
-  "renal/drc": "img/renal.png",
-  "renal/hemodialise": "img/hemodialise.png",
-  "renal/alimentacao": "img/fruit.png",
-  "renal/cateter": "img/cateter.png",
-  "renal/fistula": "img/fistula.png",
-  "renal/liquidos": "img/liquido.png",
-  "renal/peso": "img/peso.png",
-  "renal/medicacoes": "img/medicamentos.png",
+  "renal/drc": "../img/renal.png",
+  "renal/hemodialise": "../img/renal.png",
+  "renal/alimentacao": "../img/renal.png",
+  "renal/cateter": "../img/renal.png",
+  "renal/fistula": "../img/renal.png",
+  "renal/liquidos": "../img/renal.png",
+  "renal/peso": "../img/renal.png",
+  "renal/medicacoes": "../img/renal.png",
 
   // extras
-  "tips/liquidos": "img/ideia-consumo.png",
-  "calc/peso": "img/calculo-pesp.png",
-  "curiosidades/icone": "img/icone1.png",
-  "drc/oque": "img/oq-DRC.png",
-  "drc/fatores": "img/fatores-DRC.png",
+  "tips/liquidos": "../img/renal.png",
+  "calc/peso": "../img/renal.png",
+  "curiosidades/icone": "../img/renal.png",
+  "drc/oque": "../img/renal.png",
+  "drc/fatores": "../img/renal.png",
 };
 
 /* =========================================================
    1.1) Pergunta -> IMAGENS (SEM fallback)
    ========================================================= */
 const QUESTION_IMAGE_RAW = {
-  "o que e hemodialise?": ["renal/hemodialise"],
-  "me fale sobre hemodialise": ["renal/hemodialise"],
-  "o que e fistula arteriovenosa": ["renal/fistula"],
-  "o que e cateter de hemodialise": ["renal/cateter"],
-  "dicas para consumo de liquidos": ["renal/liquidos", "tips/liquidos"],
-  "qual a dieta/alimentacao na hemodialise": ["renal/alimentacao"],
-  "posso calcular meu peso": ["renal/peso", "calc/peso"],
+  "Como faço para seguir o tratamento de hemodiálise?": ["renal/hemodialise"],
+  "O que posso fazer para não falhar no tratamento de hemodiálise?": ["renal/hemodialise"],
+  "Quais meus cuidados quando faço hemodiálise?": ["renal/fistula"],
+  "Dicas para seguir firme no tratamento de hemodiálise?": ["renal/cateter"],
+  "Como manter o comprometido com a hemodiálise?": ["renal/liquidos", "tips/liquidos"],
+  "O que preciso fazer no tratamento de hemodiálise?": ["renal/alimentacao"],
+  "Como posso me manter - tratamento de hemodiálise?": ["renal/peso", "calc/peso"],
 };
 const QUESTION_IMAGE_MAP = (() => {
   const out = {};
