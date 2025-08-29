@@ -19,38 +19,117 @@ function normalizeText(text) {
    1) Mapa de ASSETS (ajuste caminhos conforme sua /img)
    ========================================================= */
 const ASSETS = {
-  "bot/camila": "../img/renal.png",
-  "logo/unilab": "../img/renal.png",
+  "chat/diabetes": "../img/chat/image17.png",
 
-  // saúde renal
-  "renal/drc": "../img/renal.png",
-  "renal/hemodialise": "../img/renal.png",
-  "renal/alimentacao": "../img/renal.png",
-  "renal/cateter": "../img/renal.png",
-  "renal/fistula": "../img/renal.png",
-  "renal/liquidos": "../img/renal.png",
-  "renal/peso": "../img/renal.png",
-  "renal/medicacoes": "../img/renal.png",
+  "chat/sintomas": "../img/chat/image5.png",
+  "chat/sintomas": "../img/chat/image8.png",
+  "chat/sintomas": "../img/chat/image10.png",
+  "chat/sintomas": "../img/chat/image9.png",
 
-  // extras
-  "tips/liquidos": "../img/renal.png",
-  "calc/peso": "../img/renal.png",
-  "curiosidades/icone": "../img/renal.png",
-  "drc/oque": "../img/renal.png",
-  "drc/fatores": "../img/renal.png",
+  "chat/exames": "../img/chat/image7.png",
+
+  "chat/tratamentos": "../img/chat/image1.png",
+  "chat/tratamentos": "../img/chat/image13.png",
+
+  "chat/hemodialise": "../img/chat/image13.png",
+
+  "chat/acessos": "../img/chat/image2.png",
+  "chat/acessos": "../img/chat/image15.png",
+
+  "chat/cuidados": "../img/chat/image16.png",
+
+  "chat/emocional": "../img/chat/image14.png",
+
+ 
 };
 
 /* =========================================================
    1.1) Pergunta -> IMAGENS (SEM fallback)
    ========================================================= */
 const QUESTION_IMAGE_RAW = {
-  "Como faço para seguir o tratamento de hemodiálise?": ["renal/hemodialise"],
-  "O que posso fazer para não falhar no tratamento de hemodiálise?": ["renal/hemodialise"],
-  "Quais meus cuidados quando faço hemodiálise?": ["renal/fistula"],
-  "Dicas para seguir firme no tratamento de hemodiálise?": ["renal/cateter"],
-  "Como manter o comprometido com a hemodiálise?": ["renal/liquidos", "tips/liquidos"],
-  "O que preciso fazer no tratamento de hemodiálise?": ["renal/alimentacao"],
-  "Como posso me manter - tratamento de hemodiálise?": ["renal/peso", "calc/peso"],
+  "Quais são os principais fatores de risco para DRC?": ["chat/diabetes"],
+  "Quais são os principais fatores de risco para a doença renal crônica?": ["chat/diabetes"],
+  "Quais são os riscos que podem causar a DRC?": ["chat/diabetes"],
+  "O que pode aumentar o risco de desenvolver DRC?": ["chat/diabetes"],
+  "Quais são as causas comuns da doença renal crônica?": ["chat/diabetes"],
+  "O que pode levar alguém a ter DRC?": ["chat/diabetes"],
+  "Quais são os fatores que contribuem para a doença renal crônica?": ["chat/diabetes"],
+  "Que condições aumentam o risco de DRC?": ["chat/diabetes"],
+  "Quais são os principais motivos que levam à doença renal crônica?": ["chat/diabetes"],
+  "O que pode fazer com que uma pessoa desenvolva DRC?": ["chat/diabetes"],
+  "Quais são os principais fatores que podem causar problemas renais crônicos?": ["chat/diabetes"],
+
+  "Quais são os sintomas comuns da DRC?": ["chat/sintomas"],
+  "Poderia me informar quais são os sintomas comuns da Doença Renal Crônica?": ["chat/sintomas"],
+  "Quais são os sinais típicos da DRC?": ["chat/sintomas"],
+  "Você sabe quais sintomas geralmente aparecem em casos de Doença Renal Crônica?": ["chat/sintomas"],
+  "Quais sintomas são frequentemente associados à DRC?": ["chat/sintomas"],
+  "Quais são os sintomas mais comuns observados em pacientes com Doença Renal Crônica?": ["chat/sintomas"],
+  "Que sintomas a DRC costuma apresentar?": ["chat/sintomas"],
+  "Pode me dizer quais são os sintomas habituais da Doença Renal Crônica?": ["chat/sintomas"],
+  "Quais são os sintomas característicos da DRC?": ["chat/sintomas"],
+  "Quais são os sintomas predominantes da Doença Renal Crônica?": ["chat/sintomas"],
+
+  "Como é feito o diagnóstico da DRC?": ["chat/exames"],
+  "Quais são os métodos usados para diagnosticar a Doença Renal Crônica?": ["chat/exames"],
+  "Como os médicos determinam se alguém tem Doença Renal Crônica?": ["chat/exames"],
+  "Quais são os critérios clínicos e laboratoriais para o diagnóstico da Doença Renal Crônica?": ["chat/exames"],
+  "Quais são os exames e procedimentos mais eficazes para diagnosticar a Doença Renal Crônica?": ["chat/exames"],
+  "Descreva os diferentes exames utilizados no diagnóstico da Doença Renal Crônica": ["chat/exames"],
+  "Quais são os sinais e sintomas que indicam a necessidade de investigar a presença de Doença Renal Crônica?": ["chat/exames"],
+  "Como é realizado o diagnóstico da Doença Renal Crônica em diferentes estágios da doença?": ["chat/exames"],
+  "Quais são os métodos padrão e alternativos para diagnosticar a Doença Renal Crônica?": ["chat/exames"],
+  "Pode explicar como é feito o diagnóstico da Doença Renal Crônica?": ["chat/exames"],
+  "Quais são os avanços recentes no diagnóstico da Doença Renal Crônica?": ["chat/exames"],
+
+  "Quais são os tratamentos disponíveis para DRC?": ["chat/tratamentos"],
+  "Quais são os tratamentos oferecidos para Doença Renal Crônica?": ["chat/tratamentos"],
+  "Quais opções de tratamento existem para DRC?": ["chat/tratamentos"],
+  "Que tipos de tratamento estão disponíveis para a Doença Renal Crônica?": ["chat/tratamentos"],
+  "Pode me informar sobre os tratamentos para DRC?": ["chat/tratamentos"],
+  "Quais são as terapias disponíveis para a Doença Renal Crônica?": ["chat/tratamentos"],
+  "Quais são os métodos de tratamento para a DRC?": ["chat/tratamentos"],
+  "O que está disponível em termos de tratamento para Doença Renal Crônica?": ["chat/tratamentos"],
+  "Quais tratamentos podem ser utilizados para a DRC?": ["chat/tratamentos"],
+  "Quais são as abordagens terapêuticas para Doença Renal Crônica?": ["chat/tratamentos"],
+  "Quais são as opções de tratamento atuais para DRC?": ["chat/tratamentos"],
+
+  "O que é hemodiálise?": ["chat/hemodialise"],
+  "O que significa hemodiálise?": ["chat/hemodialise"],
+  "Para que serve a hemodiálise?": ["chat/hemodialise"],
+  "Como funciona a hemodiálise?": ["chat/hemodialise"],
+  "Quando uma pessoa precisa fazer hemodiálise?": ["chat/hemodialise"],
+  "O que acontece durante uma sessão de hemodiálise?": ["chat/hemodialise"],
+  "Por que alguém faria hemodiálise?": ["chat/hemodialise"],
+  "A hemodiálise dói?": ["chat/hemodialise"],
+  "Quanto tempo dura uma sessão de hemodiálise?": ["chat/hemodialise"],
+  "Quais são os riscos da hemodiálise?": ["chat/hemodialise"],
+  "A hemodiálise pode curar problemas nos rins?": ["chat/hemodialise"],
+
+  "Quais os tipos de acessos para fazer hemodiálise?": ["chat/acessos"],
+  "Quais são as formas de se conectar à máquina de hemodiálise?": ["chat/acessos"],
+  "Como é feito o acesso para a hemodiálise?": ["chat/acessos"],
+  "Que tipos de acessos existem para fazer hemodiálise?": ["chat/acessos"],
+  "Quais são os métodos de acesso para hemodiálise?": ["chat/acessos"],
+  "Como os pacientes são ligados à máquina de hemodiálise": ["chat/acessos"],
+  "Quais os tipos de acessos usados na hemodiálise?": ["chat/acessos"],
+  "Que tipo de acesso é necessário para hemodiálise?": ["chat/acessos"],
+  "Como o sangue é acessado para a hemodiálise?": ["chat/acessos"],
+  "Quais são as opções de acesso para quem precisa fazer hemodiálise?": ["chat/acessos"],
+
+  "Quais os cuidados após a sessão de hemodiálise?": ["chat/cuidados"],
+  "O que devo fazer depois da hemodiálise?": ["chat/cuidados"],
+  "Quais cuidados preciso ter depois da hemodiálise?": ["chat/cuidados"],
+  "Como devo me cuidar após uma sessão de hemodiálise?": ["chat/cuidados"],
+  "O que evitar após fazer hemodiálise?": ["chat/cuidados"],
+  "Quais são os cuidados pós-hemodiálise?": ["chat/cuidados"],
+  "Tem alguma recomendação para depois da hemodiálise?": ["chat/cuidados"],
+  "Como posso me sentir após a hemodiálise e o que devo fazer?": ["chat/cuidados"],
+  "Há restrições após a hemodiálise?": ["chat/cuidados"],
+  "Preciso tomar algum cuidado especial após a hemodiálise?": ["chat/cuidados"],
+
+  "Como lidar com o impacto emocional da DRC?": ["chat/emocional"],
+  
 };
 const QUESTION_IMAGE_MAP = (() => {
   const out = {};
@@ -70,6 +149,84 @@ const QUESTION_VIDEO_RAW = {
   "Como manter o comprometido com a hemodiálise?": ["p-mXfadnpZI"],
   "O que preciso fazer no tratamento de hemodiálise?": ["p-mXfadnpZI"],
   "Como posso me manter - tratamento de hemodiálise?": ["p-mXfadnpZI"],
+
+  "Como deve ser o estilo de vida/ou dia a dia da pessoa que realiza hemodiálise?": ["GLOPWxBZ7TM"],
+  "Como é o dia a dia de alguém que faz hemodiálise?": ["GLOPWxBZ7TM"],
+  "Quais são as mudanças no estilo de vida para quem precisa de hemodiálise?": ["GLOPWxBZ7TM"],
+  "Como a rotina diária muda para uma pessoa em tratamento de hemodiálise?": ["GLOPWxBZ7TM"],
+  "O que é necessário para adaptar o estilo de vida quando se faz hemodiálise": ["GLOPWxBZ7TM"],  
+
+  "Como deve ser a alimentação de pessoas que realizam hemodiálise?": ["tiASHRuCJls"],
+  "Qual é a dieta recomendada para pessoas que fazem hemodiálise?": ["tiASHRuCJls"],
+  "Como deve ser a alimentação de alguém que está em tratamento de hemodiálise?": ["tiASHRuCJls"],
+  "Que tipo de comida é melhor para quem precisa de hemodiálise?": ["tiASHRuCJls"],
+  "O que as pessoas que fazem hemodiálise devem comer para se manterem saudáveis?": ["tiASHRuCJls"],
+
+  "Como saber a quantidade de líquido que pode ser ingerida por dia para quem realiza hemodiálise?": ["--Zu7zX7N8E"],
+  "Qual é a quantidade segura de líquidos que uma pessoa em hemodiálise pode beber por dia?": ["--Zu7zX7N8E"],
+  "Qual é o limite diário recomendado de líquidos para quem está em tratamento de hemodiálise?": ["--Zu7zX7N8E"],
+  "Como saber quanto líquido é seguro para uma pessoa em hemodiálise consumir diariamente?": ["--Zu7zX7N8E"],
+  "Qual é a quantidade ideal de água que uma pessoa em tratamento de hemodiálise deve ingerir todos os dias?": ["--Zu7zX7N8E"],
+  "Como posso calcular a quantidade correta de líquidos que devo beber por dia se estou em hemodiálise?": ["--Zu7zX7N8E"],
+
+  "Como aliviar a sede em pessoas com restrição de líquidos?": ["-79LGgPbkU8"],
+  "Dicas para consumo de líquidos": ["-79LGgPbkU8"],
+  "Dicas para aliviar a sede": ["-79LGgPbkU8"],
+  "Como diminuir a sede sem poder beber água?": ["-79LGgPbkU8"],
+
+  "O que é a fístula arteriovenosa (FAV)?": ["XM5sCXTrIik"],
+  "O que é essa tal de fístula arteriovenosa?": ["XM5sCXTrIik"],
+  "Como funciona uma fístula arteriovenosa?": ["XM5sCXTrIik"],
+  "O que exatamente é uma FAV?": ["XM5sCXTrIik"],
+  "O que significa essa fístula arteriovenosa?": ["XM5sCXTrIik"],
+  "Que negócio é esse de fístula arteriovenosa?": ["XM5sCXTrIik"],
+  "O que seria uma fístula arteriovenosa?": ["XM5sCXTrIik"],
+  "O que é uma Fístula Arteriovenosa para hemodiálise?": ["XM5sCXTrIik"],
+
+  "Como cuidar da fístula arteriovenosa?": ["fI9efWh_xTU"],
+  "Como posso cuidar do meu acesso para hemodiálise?": ["fI9efWh_xTU"],
+  "Quais são os cuidados necessários para minha fístula arteriovenosa?": ["fI9efWh_xTU"],
+  "O que devo fazer para manter minha fístula em boa condição?": ["fI9efWh_xTU"],
+  "Como garantir que minha fístula para diálise funcione corretamente?": ["fI9efWh_xTU"],
+  "Quais são os passos para cuidar da minha fístula arteriovenosa em casa?": ["fI9efWh_xTU"],
+
+  "Quais os cuidados com o cateter venoso central?": ["1t6ILKI_6ck"],
+  "Quais são os cuidados necessários com um cateter venoso central?": ["1t6ILKI_6ck"],
+  "Como devo cuidar de um cateter venoso central em casa?": ["1t6ILKI_6ck"],
+  "O que devo fazer para evitar infecções no cateter venoso central?": ["1t6ILKI_6ck"],
+  "Com que frequência devo limpar o cateter venoso central e como faço isso?": ["1t6ILKI_6ck"],
+  "Quais sinais de problemas devo observar no cateter venoso central?": ["1t6ILKI_6ck"],
+  "Quais cuidados diários são necessários para quem usa um cateter venoso central?": ["1t6ILKI_6ck"],
+  "O que é o cateter venoso central para hemodiálise?": ["1t6ILKI_6ck"],
+  "O que é um cateter venoso central usado na hemodiálise?": ["1t6ILKI_6ck"],
+  "Para que serve um cateter venoso central na hemodiálise?": ["1t6ILKI_6ck"],
+  "Como funciona um cateter venoso central na hemodiálise?": ["1t6ILKI_6ck"],
+  "Qual é a função do cateter venoso central em pacientes que fazem hemodiálise?": ["1t6ILKI_6ck"],
+  "Por que se usa um cateter venoso central na hemodiálise?": ["1t6ILKI_6ck"],
+  "O que é um cateter venoso central e como ele ajuda na hemodiálise?": ["1t6ILKI_6ck"],
+  "Quais são os benefícios de usar um cateter venoso central para hemodiálise?": ["1t6ILKI_6ck"],
+  "Como é o procedimento para colocar um cateter venoso central para hemodiálise?": ["1t6ILKI_6ck"],
+  "Um cateter venoso central é seguro para a hemodiálise?": ["1t6ILKI_6ck"],
+  "Como garantir que o cateter venoso central está funcionando corretamente?": ["1t6ILKI_6ck"],
+
+  "Quais os cuidados com o curativo do cateter para hemodiálise?": ["zjRKTzaiYmU"],
+  "Como faço para cuidar do curativo do cateter?": ["zjRKTzaiYmU"],
+  "Como é o cuidado com o curativo do cateter de hemodiálise?": ["zjRKTzaiYmU"],
+  "Tem algum cuidado especial com o curativo do cateter de hemodiálise?": ["zjRKTzaiYmU"],
+  "Como que eu faço para cuidar do curativo do cateter de hemodiálise?": ["zjRKTzaiYmU"],
+  "O que tenho que fazer com o curativo do cateter central?": ["zjRKTzaiYmU"],
+  "Quais são os cuidados com o curativo do cateter de hemodiálise?": ["zjRKTzaiYmU"],
+
+  "Quais os cuidados com as medicações?": ["LMC7cjPIXSA"],
+
+  "Faço hemodiálise preciso ser acompanhado por outros profissionais da saúde?": ["h-Dzl6IJ4DA"],
+  "Se eu faço hemodiálise, preciso de acompanhamento de outros profissionais de saúde?": ["h-Dzl6IJ4DA"],
+  "Quem faz hemodiálise tem que ser acompanhado por outros profissionais?": ["h-Dzl6IJ4DA"],
+  "Preciso de outros profissionais de saúde me acompanhando, se faço hemodiálise?": ["h-Dzl6IJ4DA"],
+  "Faço hemodiálise, é necessário ter acompanhamento de outros especialistas?": ["h-Dzl6IJ4DA"],
+  "Quem faz hemodiálise precisa do suporte de outros profissionais da saúde?": ["h-Dzl6IJ4DA"],
+  "Se eu estou fazendo hemodiálise, é importante ter outros profissionais acompanhando?": ["h-Dzl6IJ4DA"],
+  "Quem faz hemodiálise tem que ter acompanhamento de mais profissionais da saúde?": ["h-Dzl6IJ4DA"],
 };
 const QUESTION_VIDEO_MAP = (() => {
   const out = {};
