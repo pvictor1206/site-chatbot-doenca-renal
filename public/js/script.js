@@ -18,29 +18,35 @@ function normalizeText(text) {
 /* =========================================================
    1) Mapa de ASSETS (ajuste caminhos conforme sua /img)
    ========================================================= */
+/* =========================================================
+   1) Mapa de ASSETS (várias imagens por chave -> use arrays)
+   ========================================================= */
 const ASSETS = {
-  "chat/diabetes": "../img/chat/image17.png",
+  "chat/diabetes": ["../img/chat/image17.png"],
 
-  "chat/sintomas": "../img/chat/image5.png",
-  "chat/sintomas": "../img/chat/image8.png",
-  "chat/sintomas": "../img/chat/image10.png",
-  "chat/sintomas": "../img/chat/image9.png",
+  "chat/sintomas": [
+    "../img/chat/image5.png",
+    "../img/chat/image8.png",
+    "../img/chat/image10.png",
+    "../img/chat/image9.png",
+  ],
 
-  "chat/exames": "../img/chat/image7.png",
+  "chat/exames": ["../img/chat/image7.png"],
 
-  "chat/tratamentos": "../img/chat/image1.png",
-  "chat/tratamentos": "../img/chat/image13.png",
+  "chat/tratamentos": [
+    "../img/chat/image1.png",
+    "../img/chat/image13.png",
+  ],
 
-  "chat/hemodialise": "../img/chat/image13.png",
+  "chat/hemodialise": ["../img/chat/image13.png"],
 
-  "chat/acessos": "../img/chat/image2.png",
-  "chat/acessos": "../img/chat/image15.png",
+  "chat/acessos": [
+    "../img/chat/image2.png",
+    "../img/chat/image15.png",
+  ],
 
-  "chat/cuidados": "../img/chat/image16.png",
-
-  "chat/emocional": "../img/chat/image14.png",
-
- 
+  "chat/cuidados": ["../img/chat/image16.png"],
+  "chat/emocional": ["../img/chat/image14.png"],
 };
 
 /* =========================================================
@@ -240,12 +246,19 @@ const QUESTION_VIDEO_MAP = (() => {
 function resolveAssetUrls(tokens = []) {
   return tokens.flatMap(t => {
     const key = t.startsWith("asset:") ? t.slice(6) : t;
-    const url = ASSETS[key];
-    if (!url) { console.warn(`[chat] imagem não mapeada: "${t}"`); return []; }
-    return [url];
+
+    // Se o token for uma URL direta (ex: "../img/x.png"), use-o
+    if (/\.(png|jpe?g|gif|webp|svg)$/i.test(key)) return [key];
+
+    const val = ASSETS[key];
+    if (!val) {
+      console.warn(`[chat] imagem não mapeada: "${t}"`);
+      return [];
+    }
+    // Val pode ser string ou array
+    return Array.isArray(val) ? val : [val];
   });
 }
-
 function toYouTubeEmbedUrl(idOrUrl) {
   if (!idOrUrl) return null;
   let id = idOrUrl.trim();
