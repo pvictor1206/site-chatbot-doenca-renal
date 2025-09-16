@@ -46,7 +46,7 @@ nav a {
 
 .intro .character-container {
     position: absolute;
-    bottom: -500px;
+    bottom: -540px;
     left: 18%;
     z-index: 10;
     transform: scaleX(-1);
@@ -55,7 +55,7 @@ nav a {
 .intro .character-container img {
     max-width: 400px;
     height: auto;
-    transform: scale(1);
+    transform: scale(0.8);
 }
 
 .intro img.character {
@@ -1136,7 +1136,7 @@ body.noscroll { overflow: hidden; }
     justify-content: center;
   }
   .image-container-julia img{
-    max-width: 240px;
+    max-width: 180px;
   }
 
   /* TÓPICOS */
@@ -1193,6 +1193,87 @@ body.noscroll { overflow: hidden; }
   font-size: inherit;
 }
 
+
+/* ===== Icons (MOBILE e pequenos tablets) ===== */
+@media (max-width: 480px) {
+  .icons-container{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr)); /* 2 por linha */
+    gap: 14px 12px; /* row/col gap */
+    justify-items: center;
+  }
+
+  .tool-button{ display: contents; } /* o botão não interfere no layout */
+
+  .tool{
+    width: 100%;
+    max-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Ícone: controla tamanho real (independe do PNG ter “respiro” transparente) */
+  .tool img{
+    width: clamp(72px, 28vw, 98px);  /* nunca muito pequeno nem gigante */
+    height: clamp(72px, 28vw, 98px);
+    object-fit: contain;
+    display: block;
+    padding: 0;        /* remove padding que aumentava o círculo */
+  }
+
+  .tool p{
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.2;
+    max-width: 11ch;   /* evita ficar muito largo */
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;   /* no máx. 2 linhas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* celulares “médios” a pequenos tablets (3 por linha se couber) */
+@media (min-width: 481px) and (max-width: 768px){
+  .icons-container{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr)); /* 3 por linha */
+    gap: 16px 14px;
+    justify-items: center;
+  }
+
+  .tool{
+    width: 100%;
+    max-width: 200px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+
+  .tool img{
+    width: clamp(80px, 18vw, 110px);
+    height: clamp(80px, 18vw, 110px);
+    object-fit: contain; display:block; padding:0;
+  }
+
+  .tool p{
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.25;
+    max-width: 14ch;
+    text-align: center;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+}
+
+/* Desktop mantém o seu layout atual, mas deixo um ajuste opcional: */
+@media (min-width: 769px){
+  .icons-container{ gap: 24px 28px; }
+  .tool{ width: 200px; gap: 10px; }
+  .tool img{ width: 140px; height: 140px; object-fit: contain; padding: 0; }
+  .tool p{ max-width: 16ch; }
+}
 
 
 
