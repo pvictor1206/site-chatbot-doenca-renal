@@ -234,9 +234,13 @@ const QUESTION_VIDEO_RAW = {
   "Se eu estou fazendo hemodiálise, é importante ter outros profissionais acompanhando?": ["h-Dzl6IJ4DA"],
   "Quem faz hemodiálise tem que ter acompanhamento de mais profissionais da saúde?": ["h-Dzl6IJ4DA"],
 };
+// Constrói o MAP normalizado a partir do RAW
 const QUESTION_VIDEO_MAP = (() => {
+  const src = QUESTION_VIDEO_RAW || {};
   const out = {};
-  for (const [q, vids] of Object.entries(QUESTION_VIDEO_RAW)) out[normalizeText(q)] = vids;
+  for (const [q, vids] of Object.entries(src)) {
+    out[normalizeText(q)] = vids;
+  }
   return out;
 })();
 
@@ -247,18 +251,19 @@ function resolveAssetUrls(tokens = []) {
   return tokens.flatMap(t => {
     const key = t.startsWith("asset:") ? t.slice(6) : t;
 
-    // Se o token for uma URL direta (ex: "../img/x.png"), use-o
+    // Se for uma URL direta de imagem, usa direto
     if (/\.(png|jpe?g|gif|webp|svg)$/i.test(key)) return [key];
 
+    // Busca no ASSETS por chave
     const val = ASSETS[key];
     if (!val) {
       console.warn(`[chat] imagem não mapeada: "${t}"`);
       return [];
     }
-    // Val pode ser string ou array
     return Array.isArray(val) ? val : [val];
   });
 }
+
 function toYouTubeEmbedUrl(idOrUrl) {
   if (!idOrUrl) return null;
   let id = idOrUrl.trim();
@@ -275,11 +280,14 @@ function toYouTubeEmbedUrl(idOrUrl) {
         id = u.pathname.split("/").pop();
       }
     }
-  } catch { /* não era URL, trata como ID */ }
+  } catch {
+    // não era URL, trata como ID
+  }
   id = (id || "").replace(/[^a-zA-Z0-9_-]/g, "");
   if (!id) return null;
   return `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1`;
 }
+
 function resolveVideoEmbeds(tokens = []) {
   return tokens.map(toYouTubeEmbedUrl).filter(Boolean);
 }
@@ -431,41 +439,31 @@ function applyTransform(img) {
 
 /* =========================================================
    1.5) DETECÇÃO E RENDER DE LISTAS (tópicos)
-   - Converte respostas longas com "•" (ou -, *, 1) em UL bonitinha
    ========================================================= */
 function detectBullets(text) {
-  // detecta presença de marcadores comuns
   return /•|-|\*\s|\d+\)/.test(text);
 }
-
 function parseBullets(text) {
-  // Divide introdução (antes do primeiro marcador) e itens
-  // Aceita bullets inline: "... como: • item; • item; ..."
   const firstBulletIdx = text.search(/•|-|\*\s|\d+\)/);
   if (firstBulletIdx === -1) return { intro: text.trim(), items: [] };
 
   const intro = text.slice(0, firstBulletIdx).trim().replace(/[;,\s]+$/,'');
   const rest = text.slice(firstBulletIdx);
 
-  // normaliza diferentes marcadores para "• " e quebra por esse padrão
   const normalized = rest
     .replace(/\r\n/g, "\n")
     .replace(/\d+\)\s*/g, "• ")
     .replace(/-\s*/g, "• ")
     .replace(/\*\s*/g, "• ")
-    .replace(/\s*•\s*/g, "\n• "); // força quebra antes de cada "•"
+    .replace(/\s*•\s*/g, "\n• ");
 
   let parts = normalized.split(/\n•\s*/).map(s => s.trim()).filter(Boolean);
-
-  // remove pontuação final redundante
   parts = parts.map(p => p.replace(/^[•\-\*\d\)]+\s*/,'').replace(/[;,\s]+$/,'').trim());
 
   return { intro, items: parts };
 }
-
 function renderBulletsHTML(intro, items) {
   if (!items || items.length === 0) return "";
-  // bloco com UL estilizada inline (para não depender do CSS externo)
   const li = items.map(it => `<li>${escapeHtml(it)}</li>`).join("");
   const introHtml = intro ? `<div class="list-intro" style="font-weight:600;margin:0 0 .5rem 0;">${escapeHtml(intro)}</div>` : "";
   return `
@@ -477,7 +475,6 @@ function renderBulletsHTML(intro, items) {
     </div>
   `;
 }
-
 function escapeHtml(s=""){
   return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
@@ -578,24 +575,7 @@ function addBotMessage(message) {
 }
 
 /* =========================================================
-   UI BÁSICA
-   ========================================================= */
-window.toggleChat = function toggleChat() {
-  const chatWindow = document.getElementById('chat-window');
-  chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'flex' : 'none';
-};
-window.toggleExpandChat = function toggleExpandChat() {
-  const chatWindow = document.getElementById('chat-window');
-  chatWindow.classList.toggle('expanded');
-};
-window.toggleMinimizeChat = function toggleMinimizeChat() {
-  const chatWindow = document.getElementById('chat-window');
-  chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'block' : 'none';
-};
-
-/* =========================================================
    Helpers de parsing para mensagens do USUÁRIO (opcional)
-   — mantém suporte a listas digitadas pelo usuário
    ========================================================= */
 function looksLikeList(text) {
   return /(?:^|\n)\s*(?:•|-|\*|\d+\))/m.test(text) || /•/.test(text);
@@ -666,15 +646,14 @@ async function handleResponse(doc, data, userMessage = "", perguntaCorreta = "")
 
   // IMAGENS: Firestore (se houver) senão mapa local
   let imageKeys = Array.isArray(data.imagens) ? data.imagens : [];
+  const normQ = normalizeText(perguntaCorreta || userMessage);
   if (imageKeys.length === 0) {
-    const normQ = normalizeText(perguntaCorreta || userMessage);
     imageKeys = QUESTION_IMAGE_MAP[normQ] || [];
   }
   const alts = Array.isArray(data.alts) ? data.alts : [];
   const images = resolveAssetUrls(imageKeys);
 
   // VÍDEOS: somente do mapa local
-  const normQ = normalizeText(perguntaCorreta || userMessage);
   const videoTokens = QUESTION_VIDEO_MAP[normQ] || [];
   const videos = resolveVideoEmbeds(videoTokens);
 
@@ -684,7 +663,7 @@ async function handleResponse(doc, data, userMessage = "", perguntaCorreta = "")
     images, alts, videos
   });
 
-  const hasExtraInfo = data.temExtraInfo && data.temExtraInfo.toLowerCase() === "sim";
+  const hasExtraInfo = (data.temExtraInfo && String(data.temExtraInfo).toLowerCase() === "sim");
   if (hasExtraInfo) {
     const encaminhamento = data.respostaEncaminhada;
     addExtraInfoButton(data.extraInfo, encaminhamento);
@@ -737,23 +716,20 @@ window.sendMessage = function sendMessage() {
 };
 
 /* =========================================================
-   Botões de assuntos/atalhos
+   4) Botões de assuntos/atalhos — com checagem defensiva
    ========================================================= */
 const toggleSubjectsBtn = document.getElementById('toggle-subjects-btn');
 const subjectsContainer = document.getElementById('subjects-container');
 const toggleIcon = document.getElementById('toggle-subjects-icon');
 
-toggleSubjectsBtn.addEventListener('click', () => {
-  if (subjectsContainer.style.display === 'none' || subjectsContainer.style.display === '') {
-    subjectsContainer.style.display = 'flex';
-    toggleIcon.classList.remove('fa-chevron-up');
-    toggleIcon.classList.add('fa-chevron-down');
-  } else {
-    subjectsContainer.style.display = 'none';
-    toggleIcon.classList.remove('fa-chevron-down');
-    toggleIcon.classList.add('fa-chevron-up');
-  }
-});
+if (toggleSubjectsBtn && subjectsContainer && toggleIcon) {
+  toggleSubjectsBtn.addEventListener('click', () => {
+    const isHidden = (subjectsContainer.style.display === 'none' || subjectsContainer.style.display === '');
+    subjectsContainer.style.display = isHidden ? 'flex' : 'none';
+    toggleIcon.classList.toggle('fa-chevron-up', !isHidden);
+    toggleIcon.classList.toggle('fa-chevron-down', isHidden);
+  });
+}
 
 document.querySelectorAll('.subject-btn').forEach(button => {
   button.addEventListener('click', () => {
@@ -765,24 +741,29 @@ document.querySelectorAll('.subject-btn').forEach(button => {
 
 document.querySelectorAll('.tool-button').forEach(button => {
   button.addEventListener('click', () => {
-    const label = button.querySelector('p').textContent;
-    toggleChat();
+    const label = button.querySelector('p')?.textContent || '';
+    window.toggleChat();
     addUserMessage(label);
     processUserMessage(label);
   });
 });
 
 /* =========================================================
-   Modal de cálculo (inalterado)
+   5) Modal de cálculo (IMC)
    ========================================================= */
 const modalEl      = document.getElementById('calc-modal');
 const backdropEl   = document.getElementById('calc-backdrop');
 const viewMenu     = document.getElementById('calc-view-menu');
-const viewWeight   = document.getElementById('calc-view-weight');
-const inputPeso    = document.getElementById('peso-seco');
-const resultEl     = document.getElementById('resultado-calculo');
+const viewIMC      = document.getElementById('calc-view-imc');
+
+const inputPesoIMC   = document.getElementById('imc-peso');
+const inputAlturaIMC = document.getElementById('imc-altura');
+const resultIMCEl    = document.getElementById('resultado-imc');
+
+function onEscClose(e){ if(e.key === 'Escape') closeCalcModal(); }
 
 function openCalcModal(){
+  if (!modalEl || !backdropEl) return;
   modalEl.style.display = 'grid';
   backdropEl.style.display = 'block';
   showView('menu');
@@ -790,30 +771,86 @@ function openCalcModal(){
   document.addEventListener('keydown', onEscClose);
 }
 function closeCalcModal(){
+  if (!modalEl || !backdropEl) return;
   modalEl.style.display = 'none';
   backdropEl.style.display = 'none';
-  clearFields();
+  clearFieldsIMC();
   document.removeEventListener('keydown', onEscClose);
 }
-function onEscClose(e){ if(e.key === 'Escape') closeCalcModal(); }
-backdropEl.addEventListener('click', closeCalcModal);
-function clearFields(){ inputPeso.value = ''; resultEl.textContent = ''; }
-function showView(which){
-  viewMenu.style.display   = 'none';
-  viewWeight.style.display = 'none';
-  if(which === 'menu'){ viewMenu.style.display = 'block'; }
-  else if(which === 'weight'){ viewWeight.style.display = 'block'; inputPeso.focus(); }
+backdropEl?.addEventListener('click', closeCalcModal);
+
+function clearFieldsIMC(){
+  if (inputPesoIMC)   inputPesoIMC.value = '';
+  if (inputAlturaIMC) inputAlturaIMC.value = '';
+  if (resultIMCEl)    resultIMCEl.textContent = '';
 }
-window.showCalc = function(kind){ if(kind === 'weight') showView('weight'); }
-window.goBackToMenu = function(){ clearFields(); showView('menu'); }
+function showView(which){
+  if (!viewMenu || !viewIMC) return;
+  viewMenu.style.display = 'none';
+  viewIMC.style.display  = 'none';
+  if (which === 'menu') { viewMenu.style.display = 'block'; }
+  else if (which === 'imc') { viewIMC.style.display = 'block'; inputPesoIMC?.focus(); }
+}
+window.showCalc = function(kind){ if (kind === 'imc') showView('imc'); }
+window.goBackToMenu = function(){ clearFieldsIMC(); showView('menu'); }
 window.openCalcModal = openCalcModal;
 window.closeCalcModal = closeCalcModal;
-window.calcularPesoMaximo = function () {
-  const pesoSeco = parseFloat(inputPeso.value);
-  if (!isNaN(pesoSeco) && pesoSeco > 0) {
-    const resultado = (pesoSeco * 3) / 100;
-    resultEl.textContent = `Você pode ganhar no máximo ${resultado.toFixed(2)} kg entre as sessões.`;
-  } else {
-    resultEl.textContent = 'Por favor, insira um valor válido para o peso seco.';
+
+window.calcularIMC = function () {
+  const peso = parseFloat(inputPesoIMC?.value);
+  const altura = parseFloat(inputAlturaIMC?.value);
+
+  if (isNaN(peso) || peso <= 0 || isNaN(altura) || altura <= 0) {
+    resultIMCEl.textContent = 'Por favor, preencha peso e altura válidos.';
+    return;
   }
+
+  const imc = peso / (altura * altura);
+  let classificacao = '';
+  if (imc < 18.5) classificacao = 'Abaixo do peso';
+  else if (imc < 25) classificacao = 'Peso normal';
+  else if (imc < 30) classificacao = 'Sobrepeso';
+  else if (imc < 35) classificacao = 'Obesidade grau I';
+  else if (imc < 40) classificacao = 'Obesidade grau II';
+  else classificacao = 'Obesidade grau III';
+
+  resultIMCEl.textContent = `Seu IMC é ${imc.toFixed(2)} — ${classificacao}.`;
+};
+
+
+
+/* ============================
+   Controle de fonte do CHAT
+   (A+ / A- afetam só a conversa)
+   ============================ */
+
+function clamp(val, min, max) {
+  return Math.min(Math.max(val, min), max);
+}
+
+function getChatFontPx() {
+  const chat = document.getElementById('chat-window');
+  if (!chat) return 14;
+  const v = getComputedStyle(chat).getPropertyValue('--chat-fs').trim();
+  const n = parseFloat(v);
+  return isNaN(n) ? 14 : n;
+}
+
+function setChatFontPx(px) {
+  const chat = document.getElementById('chat-window');
+  if (!chat) return;
+  chat.style.setProperty('--chat-fs', `${px}px`);
+}
+
+/* Botões A+ e A- do header do chat */
+window.increaseChatFontSize = function () {
+  const cur = getChatFontPx();
+  const next = clamp(cur + 1.5, 12, 22); // limites entre 12px e 22px
+  setChatFontPx(next);
+};
+
+window.decreaseChatFontSize = function () {
+  const cur = getChatFontPx();
+  const next = clamp(cur - 1.5, 12, 22);
+  setChatFontPx(next);
 };

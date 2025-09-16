@@ -1180,6 +1180,18 @@ body.noscroll { overflow: hidden; }
   .send-button, .audio-button{ width: 44px; height: 44px; font-size: 18px }
 }
 
+/* O HEADER/TÍTULO do chat ficam FIXOS (não aumentam) */
+.chat-header,
+.chat-title {
+  font-size: 14px; /* ajuste se quiser outro fixo */
+}
+
+/* (Opcional) Se existir algum seletor definindo font-size fixo nas bolhas,
+   deixe como inherit para garantir que usem var(--chat-fs) */
+.chat-message.bot,
+.chat-message.user {
+  font-size: inherit;
+}
 
 
 
