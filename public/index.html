@@ -3,58 +3,492 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Conheça a Camila</title>
+  <title>Conheça a Camila - Saúde Renal</title>
 
-  <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"/>
 
-  <!-- FIX: garantimos a variável de fonte do chat e aplicamos nos elementos do chat -->
   <style>
-    /* você pode mover isso para o style.css se preferir */
-    #chat-window{
-      --chat-fs: 16px;           /* tamanho base */
-      font-family: "Nunito", system-ui, -apple-system, Arial, sans-serif;
+    :root {
+      /* Paleta Azul Bebê & Saúde */
+      --primary-color: #4FC3F7;      /* Azul principal (botões, destaques) */
+      --primary-dark: #039BE5;       /* Azul mais escuro para hover */
+      --bg-body: #E1F5FE;            /* Azul bebê bem clarinho para o fundo */
+      --bg-card: #FFFFFF;            /* Branco para cartões */
+      --text-main: #2c3e50;          /* Cinza escuro para leitura */
+      --text-light: #546e7a;         /* Cinza médio */
+      --shadow-soft: 0 10px 25px rgba(179, 229, 252, 0.4); /* Sombra azulada */
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 8px;
     }
-    #chat-window .chat-body,
-    #chat-window .chat-message,
-    #chat-window .chat-input,
-    #chat-window .read-more-button{
-      font-size: var(--chat-fs);
-      line-height: 1.45;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    /* evita overlays bloqueando clique nos botões do cabeçalho */
-    #chat-window .chat-header{
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    /* --- Header --- */
+    header {
+      background: var(--bg-card);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo img {
+      max-height: 60px;
+      object-fit: contain;
+    }
+
+    /* --- Container Principal --- */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* --- Hero Section (Intro) --- */
+    .intro {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #ffffff 0%, #E1F5FE 100%);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      margin-bottom: 3rem;
+      box-shadow: var(--shadow-soft);
+      gap: 2rem;
+    }
+
+    .text-container h1 {
+      color: var(--primary-dark);
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .text-container p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+    }
+
+    .character-container img {
+      max-width: 300px;
+      height: auto;
+      filter: drop-shadow(0 10px 10px rgba(79, 195, 247, 0.2));
+    }
+
+    /* --- Seções Gerais --- */
+    section {
+      margin-bottom: 4rem;
+    }
+
+    h2 {
+      color: var(--primary-dark);
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    /* --- Botões de Ação --- */
+    button {
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #start-chat-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(79, 195, 247, 0.4);
+    }
+
+    #start-chat-button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .whatsapp-btn {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-left: 10px;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #1ebc57;
+      transform: translateY(-2px);
+    }
+
+    /* --- Grid de Ferramentas (Cards) --- */
+    .icons-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      margin-bottom: 2rem;
+    }
+
+    .tool-button {
+      background: var(--bg-card);
+      border: 1px solid #E1F5FE;
+      border-radius: var(--radius-md);
+      padding: 0; /* Remove padding do botão para usar o flex interno */
+      height: 100%;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+
+    .tool {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .tool-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(3, 155, 229, 0.15);
+      border-color: var(--primary-color);
+    }
+
+    .tool img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+    }
+
+    .tool p {
+      font-weight: 700;
+      color: var(--text-light);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    /* --- Seção "Onde Surgiu" --- */
+    .class-onde-surgiu-container {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .class-onde-surgiu-container img {
+      max-width: 250px;
+    }
+    
+    .text-container-julia {
+      text-align: left;
+    }
+    
+    .text-container-julia h2 {
+      text-align: left;
+    }
+
+    /* --- Contatos --- */
+    .contato-container {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .contato-item {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--radius-md);
+      text-align: center;
+      min-width: 250px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+
+    .contato-item img {
+      vertical-align: middle;
+      margin-right: 8px;
+      width: 24px;
+    }
+
+    /* --- Footer --- */
+    footer {
+      background-color: white;
+      text-align: center;
+    }
+    
+    .footer-content {
+      padding: 40px 20px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    /* --- CHAT CSS (Modernizado) --- */
+    .chat-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9990;
+    }
+
+    .chat-button-container {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: column;
+    }
+
+    .chat-button-wrapper {
       position: relative;
-      z-index: 2;
+      margin-bottom: 10px;
+      margin-right: 10px;
     }
-    /* modal visível quando abrimos via JS */
-    .modal-backdrop{
-      position: fixed; inset: 0; background: rgba(0,0,0,.45);
-      z-index: 9997;
+
+    .chat-button {
+      background: white;
+      color: var(--text-main);
+      padding: 10px 15px;
+      border-radius: 20px 20px 0 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: 1px solid #eee;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
     }
-    .modal{
-      position: fixed; inset: 0; display: grid; place-items: center;
-      z-index: 9998;
+
+    .chat-icon-wrapper {
+      width: 70px;
+      height: 70px;
+      background: white;
+      border-radius: 50%;
+      border: 4px solid var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(79, 195, 247, 0.5);
+      cursor: pointer;
+      transition: transform 0.3s;
+      overflow: hidden;
     }
-    .modal-content{
-      width: min(96vw, 560px); background: #fff; color: #111;
-      border-radius: 16px; padding: 18px; box-shadow: 0 18px 60px rgba(0,0,0,.25);
+
+    .chat-icon-wrapper:hover {
+      transform: scale(1.1);
     }
-    .calc-grid{display:grid; gap:12px; grid-template-columns: 1fr;}
-    .calc-type, .btn.primary, .btn.ghost, .icon-btn.close{
-      appearance:none; border:0; border-radius:12px; padding:10px 14px; cursor:pointer;
+
+    .chat-icon-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
-    .calc-type{background:#f2f4f7; font-weight:700;}
-    .btn.primary{background:#2CA9E1; color:#fff; font-weight:700;}
-    .btn.ghost{background:#eef2f6; color:#111;}
-    .icon-btn.close{background:#ff4d4f; color:#fff; float:right; font-weight:900; font-size:18px;}
-    .field-label{display:block; margin:12px 0 6px;}
-    .field-input{
-      width:100%; padding:10px 12px; border-radius:10px; border:1px solid #cfd8e3; font-size:16px;
+
+    /* --- Janela do Chat --- */
+    #chat-window {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 380px;
+      height: 550px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      z-index: 9995;
+      overflow: hidden;
+      border: 1px solid #E1F5FE;
+      font-family: "Nunito", sans-serif;
     }
-    .result{margin-top:12px; font-weight:700;}
-    .video-wrapper{border-radius:12px; overflow:hidden;}
+
+    .chat-header {
+      background: linear-gradient(135deg, #4FC3F7 0%, #29B6F6 100%);
+      color: white;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .chat-header button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-left: 5px;
+    }
+
+    .chat-header button:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background-color: #F8FDFF;
+    }
+
+    .chat-message {
+      background: white;
+      padding: 12px;
+      border-radius: 0 16px 16px 16px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      color: #333;
+      border: 1px solid #E1F5FE;
+      display: inline-block;
+      max-width: 90%;
+    }
+
+    /* Botões de Assuntos dentro do chat */
+    .subjects-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 10px;
+      background: #f0f9ff;
+      border-top: 1px solid #e1f5fe;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .subject-btn {
+      background: white;
+      border: 1px solid #B3E5FC;
+      color: var(--primary-dark);
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    .subject-btn:hover {
+      background: #E1F5FE;
+    }
+
+    .toggle-subjects-container {
+      text-align: center;
+      background: #f0f9ff;
+      padding: 5px;
+      border-top: 1px solid #eee;
+    }
+    
+    #toggle-subjects-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary-dark);
+    }
+
+    .chat-input-container {
+      padding: 10px;
+      background: white;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 10px 15px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      outline: none;
+      background: #f9f9f9;
+    }
+
+    .chat-input:focus {
+      border-color: var(--primary-color);
+      background: white;
+    }
+
+    .send-button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .send-button:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .intro, .class-onde-surgiu-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+      }
+
+      .text-container-julia {
+        text-align: center;
+      }
+      
+      .text-container-julia h2 {
+        text-align: center;
+      }
+
+      .icons-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      #chat-window {
+        width: 90%;
+        bottom: 80px;
+        right: 5%;
+        height: 60vh;
+      }
+    }
+    
+    /* MODAL STYLES (Mantido e ajustado) */
+    .modal-backdrop{ position: fixed; inset: 0; background: rgba(3, 155, 229, 0.3); backdrop-filter: blur(2px); z-index: 9997; }
+    .modal{ position: fixed; inset: 0; display: grid; place-items: center; z-index: 9998; }
+    .modal-content{ width: min(96vw, 560px); background: #fff; color: #111; border-radius: 16px; padding: 24px; box-shadow: 0 18px 60px rgba(0,0,0,.15); }
+    .calc-type{background:#E1F5FE; color: var(--primary-dark); font-weight:700; border: none; padding: 15px; border-radius: 12px; margin-bottom: 10px; width: 100%; text-align: left;}
+    .calc-type:hover {background: #B3E5FC;}
+    .btn.primary{background:var(--primary-color); color:#fff; border:none; padding: 10px 20px; border-radius: 8px;}
+    .btn.ghost{background:#f5f5f5; border:none; padding: 5px 10px; border-radius: 8px;}
+    .field-input{width:100%; padding:12px; border-radius:8px; border:1px solid #B3E5FC; margin-bottom: 10px;}
   </style>
 </head>
 
@@ -67,93 +501,76 @@
 
   <main>
     <section class="intro">
-      <div class="content">
-        <div class="text-container">
-          <h1>CONVERSAR SOBRE A SUA SAÚDE NUNCA FOI TÃO FÁCIL</h1>
-          <div class="text-group">
-            <p>Camila, nosso enfermeira virtual tem como objetivo a transmissão de orientações sobre autocuidado para pessoas que estão em hemodiálise.</p>
-          </div>
-        </div>
+      <div class="text-container">
+        <h1>CONVERSAR SOBRE A SUA SAÚDE NUNCA FOI TÃO FÁCIL</h1>
+        <p>Camila, nossa enfermeira virtual, tem como objetivo a transmissão de orientações sobre autocuidado para pessoas que estão em hemodiálise.</p>
       </div>
       <div class="character-container">
         <img src="img/enfermeira01.png" alt="Camila Chatbot" class="character">
       </div>
     </section>
 
-    <section class="meet-julia">
-      <div class="text-paragraph">
-        <h2>Conheça a Camila</h2>
-        <p>Olá! Como você está?</p>
-        <p>
-          Olá! Sou Camila, estou aqui para ajudar na compreensão sobre autocuidado a pessoas que realizam hemodiálise.
-        </p>
-        <p>Se quiser conversar agora, basta clicar no botão abaixo:</p>
+    <section class="meet-julia" style="text-align: center; max-width: 800px; margin: 0 auto 4rem auto;">
+      <h2>Conheça a Camila</h2>
+      <p style="font-size: 1.2rem; color: var(--primary-dark); font-weight: bold;">Olá! Como você está?</p>
+      <p>Sou Camila, estou aqui para ajudar na compreensão sobre autocuidado a pessoas que realizam hemodiálise.</p>
+      
+      <div style="margin-top: 20px;">
         <button id="start-chat-button" onclick="openChat()">Iniciar Conversa pelo Site</button>
         <button class="whatsapp-btn">
-          <i class="fab fa-whatsapp"></i> Iniciar Conversa pelo WhatsApp
+          <i class="fab fa-whatsapp"></i> WhatsApp
         </button>
       </div>
     </section>
 
     <section class="class-ferramentas">
-      <div class="text-ferramentas"><h2>Conheça sobre a Doença Renal Crônica</h2></div>
+      <h2>Conheça sobre a Doença Renal Crônica</h2>
 
       <div class="icons-container">
-        <button class="tool-button"><div class="tool"><img src="img/renal.png"><p>Doença Renal Crônica</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/hemodialise.png"><p>Hemodiálise</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/fruit.png"><p>Alimentação</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/cateter.png"><p>Cateter de Hemodiálise</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/fistula.png"><p>Fístula Arteriovenosa</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/renal.png" alt=""><p>Doença Renal</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/hemodialise.png" alt=""><p>Hemodiálise</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/fruit.png" alt=""><p>Alimentação</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/cateter.png" alt=""><p>Cateter</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/fistula.png" alt=""><p>Fístula</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/liquido.png" alt=""><p>Líquidos</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/peso.png" alt=""><p>Peso</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/medicamentos.png" alt=""><p>Medicações</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/ideia-consumo.png" alt=""><p>Dicas de Consumo</p></div></button>
+        <button class="tool-button"><div class="tool"><img src="img/calculo-pesp.png" alt=""><p>Calcule seu peso</p></div></button>
       </div>
-
-      <div class="icons-container">
-        <button class="tool-button"><div class="tool"><img src="img/liquido.png"><p>Líquidos</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/peso.png"><p>Peso</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/medicamentos.png"><p>Medicações</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/ideia-consumo.png"><p>Dicas para o consumo de líquidos</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/calculo-pesp.png"><p>Calcule seu peso</p></div></button>
-      </div>
-
-      <div class="icons-container">
-        <button class="tool-button"><div class="tool"><img src="img/oq-DRC.png"><p>O que é a Doença Renal Crônica?</p></div></button>
-        <button class="tool-button"><div class="tool"><img src="img/fatores-DRC.png"><p>Quais os fatores de riscos para a Doença Renal Crônica?</p></div></button>
+      
+      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+         <button class="tool-button" style="min-width: 200px;"><div class="tool"><img src="img/oq-DRC.png"><p>O que é a DRC?</p></div></button>
+         <button class="tool-button" style="min-width: 200px;"><div class="tool"><img src="img/fatores-DRC.png"><p>Fatores de Risco</p></div></button>
       </div>
     </section>
 
     <section class="class-onde-surgiu-container">
-      <div class="class-onde-surgiu">
-        <div class="content-onde-surgiu">
-          <div class="text-container-julia">
-            <h2>De onde surgiu a Camila?</h2>
-            <p>
-              A 'Camila - agente conversacional de saúde renal' é um produto técnico-científico desenvolvido pelo Grupo de Estudos de Enfermagem na Saúde do Adulto (GECESA) da Universidade da Integração Internacional da Lusofonia Afro-Brasileira (UNILAB).
-            </p>
-          </div>
-        </div>
+      <div class="text-container-julia">
+        <h2>De onde surgiu a Camila?</h2>
+        <p>
+          A 'Camila - agente conversacional de saúde renal' é um produto técnico-científico desenvolvido pelo Grupo de Estudos de Enfermagem na Saúde do Adulto (GECESA) da Universidade da Integração Internacional da Lusofonia Afro-Brasileira (UNILAB).
+        </p>
       </div>
-
-      <div class="class-onde-surgiu-lateral">
-        <div class="image-container-julia">
-          <img src="img/enfermeira03.png" alt="Imagem da Júlia">
-        </div>
+      <div class="image-container-julia">
+        <img src="img/enfermeira03.png" alt="Imagem da Júlia">
       </div>
     </section>
-  </main>
 
-  <section class="class-contatos">
-    <div class="text-contatos">
-      <div class="contato-container">
-        <div class="contato-item">
-          <h2>Contato</h2>
-          <p><img src="img/email-icon.png" alt="Ícone de email" class="icon"> darianearaujoufc@gmail.com</p>
+    <section class="class-contatos">
+        <h2>Fale Conosco</h2>
+        <div class="contato-container">
+            <div class="contato-item">
+                <img src="img/email-icon.png" alt="Email">
+                <strong>Email:</strong><br> darianearaujoufc@gmail.com
+            </div>
+            <div class="contato-item">
+                <img src="img/contato-item.png" alt="Instagram">
+                <strong>Rede Social:</strong><br> @gecesa_
+            </div>
         </div>
-        <div class="contato-item">
-          <h2>Rede Social</h2>
-          <p><img src="img/contato-item.png" alt="Ícone do Instagram" class="icon"> @gecesa_</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <footer>
     <div class="footer-content">
@@ -161,40 +578,40 @@
     </div>
   </footer>
 
-  <!-- Botão/Bolha do Chat -->
   <div class="chat-icon">
     <div class="chat-button-container">
       <div class="chat-button-wrapper">
         <button class="chat-button" onclick="openChat()">Oi! Como posso te ajudar?</button>
-        <div class="chat-button-arrow-right"></div>
       </div>
       <div class="chat-icon-wrapper" onclick="openChat()">
-        <img src="img/enfermeira02.png" alt="Chat Icon" class="chat-icon-image">
+        <img src="img/enfermeira02.png" alt="Chat" class="chat-icon-image" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-user-nurse\' style=\'font-size:30px; color:#4FC3F7\'></i>'">
       </div>
     </div>
   </div>
 
-  <!-- Janela do Chat -->
   <div id="chat-window" class="chat-window" style="display:none">
     <div class="chat-header">
-      <span class="chat-title">Camila</span>
-      <button class="font-button" onclick="increaseChatFontSize()">A+</button>
-      <button class="font-button" onclick="decreaseChatFontSize()">A-</button>
-      <button class="calc-button" onclick="openCalcModal()">Cálculo</button>
-      <button class="expand-button" onclick="toggleExpandChat()"><i class="fas fa-expand"></i></button>
-      <button class="chat-minimize" onclick="closeChat()"><i class="fas fa-minus"></i></button>
+      <div style="display:flex; align-items:center; gap:10px;">
+         <i class="fas fa-robot"></i>
+         <span class="chat-title">Camila</span>
+      </div>
+      <div>
+        <button onclick="increaseChatFontSize()" title="Aumentar Fonte">A+</button>
+        <button onclick="decreaseChatFontSize()" title="Diminuir Fonte">A-</button>
+        <button onclick="openCalcModal()" title="Calculadora"><i class="fas fa-calculator"></i></button>
+        <button onclick="closeChat()" title="Minimizar"><i class="fas fa-minus"></i></button>
+      </div>
     </div>
 
     <div class="chat-body" id="chat-body">
       <div class="chat-message">
-        Olá, sou um robô virtual com a finalidade de oferecer orientações as pessoas em hemodiálise sobre cuidados diários e bem-estar, então vamos lá! Como você prefere chamado?
+        Olá, sou um robô virtual com a finalidade de oferecer orientações as pessoas em hemodiálise sobre cuidados diários e bem-estar. Como você prefere ser chamado?
       </div>
     </div>
 
-    <!-- seta para mostrar/ocultar assuntos -->
     <div class="toggle-subjects-container">
       <button id="toggle-subjects-btn" aria-label="Mostrar assuntos">
-        <i class="fas fa-chevron-up" id="toggle-subjects-icon"></i>
+        <small>Ver tópicos</small> <i class="fas fa-chevron-up" id="toggle-subjects-icon"></i>
       </button>
     </div>
 
@@ -202,65 +619,46 @@
       <button class="subject-btn">Doença Renal Crônica</button>
       <button class="subject-btn">Hemodiálise</button>
       <button class="subject-btn">Alimentação</button>
-      <button class="subject-btn">Cateter de Hemodiálise</button>
-      <button class="subject-btn">Fístula Arteriovenosa</button>
+      <button class="subject-btn">Cateter</button>
+      <button class="subject-btn">Fístula</button>
       <button class="subject-btn">Líquidos</button>
       <button class="subject-btn">Peso</button>
       <button class="subject-btn">Medicações</button>
-      <button class="subject-btn">Dicas para o consumo de líquidos</button>
-      <button class="subject-btn">Calcule seu peso</button>
     </div>
 
     <div class="chat-input-container">
       <input type="text" id="chat-input" placeholder="Digite sua mensagem..." class="chat-input" onkeydown="handleUserInput(event)"/>
       <button class="send-button" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-      <button id="stop-button" class="audio-button" onclick="stopRecording()" style="display:none;"><i class="fas fa-stop"></i></button>
-    </div>
-
-    <!-- Indicador de gravação -->
-    <div id="recording-indicator" style="display:none; justify-content:center; margin:10px auto;">
-      <div style="width:20px; height:20px; border-radius:50%; background:red; animation:pulse 1s infinite;"></div>
-      <span id="countdown-timer" style="margin-left:10px; font-weight:bold; color:red;"></span>
     </div>
   </div>
 
-  <style>
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.5); opacity: .5; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-  </style>
-
-  <!-- Backdrop do cálculo -->
-  <div id="calc-backdrop" class="modal-backdrop" style="display:none"></div>
-
-  <!-- Modal de Cálculo -->
-  <div id="calc-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="calc-title" style="display:none">
+  <div id="calc-backdrop" class="modal-backdrop" style="display:none" onclick="closeCalcModal()"></div>
+  <div id="calc-modal" class="modal" style="display:none">
     <div class="modal-content">
-      <button class="icon-btn close" aria-label="Fechar" onclick="closeCalcModal()">×</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <h3 style="margin:0; color:var(--primary-dark)">Calculadora de Saúde</h3>
+          <button class="icon-btn close" onclick="closeCalcModal()" style="background:none; border:none; font-size:24px; color:#999; cursor:pointer;">&times;</button>
+      </div>
 
-      <!-- MENU -->
       <div id="calc-view-menu">
-        <h3 id="calc-title">Qual tipo de cálculo você deseja fazer?</h3>
+        <p style="margin-bottom:15px;">Qual tipo de cálculo você deseja fazer?</p>
         <div class="calc-grid">
-          <button class="calc-type" onclick="showCalc('weight')">Ganho de peso entre sessões</button>
-          <!-- espaço para futuras calculadoras -->
+          <button class="calc-type" onclick="showCalc('weight')">
+              <i class="fas fa-weight" style="margin-right:10px;"></i> Ganho de peso entre sessões
+          </button>
         </div>
       </div>
 
-      <!-- CÁLCULO: GANHO DE PESO ENTRE SESSÕES -->
       <div id="calc-view-weight" class="calc-view" style="display:none">
-        <div class="view-header" style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+        <div class="view-header" style="margin-bottom:15px;">
           <button class="btn ghost" onclick="goBackToMenu()">← Voltar</button>
-          <h3 style="margin:0">Ganho de peso entre sessões</h3>
         </div>
+        
+        <label for="peso-seco" class="field-label" style="display:block; margin-bottom:5px;">Informe o peso seco (Kg)</label>
+        <input type="number" id="peso-seco" class="field-input" placeholder="Ex: 70.5" step="0.01"/>
 
-        <label for="peso-seco" class="field-label">Informe o peso seco (Kg)</label>
-        <input type="number" id="peso-seco" class="field-input" placeholder="Ex: 55" inputmode="decimal" min="0" step="0.01"/>
-
-        <button class="btn primary" onclick="calcularPesoMaximo()">Calcular</button>
-        <p id="resultado-calculo" class="result" aria-live="polite"></p>
+        <button class="btn primary" onclick="calcularPesoMaximo()" style="width:100%; margin-top:10px;">Calcular</button>
+        <div id="resultado-calculo" class="result" style="margin-top:15px; padding:10px; background:#f0f9ff; border-radius:8px;"></div>
       </div>
     </div>
   </div>
