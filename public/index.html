@@ -440,24 +440,106 @@
        1) Mapa de ASSETS
        ========================================================= */
     const ASSETS = {
-      "chat/diabetes": ["img/chat/image17.png"],
-      "chat/sintomas": ["img/chat/image5.png", "img/chat/image8.png", "img/chat/image10.png", "img/chat/image9.png"],
-      "chat/exames": ["img/chat/image7.png"],
-      "chat/tratamentos": ["img/chat/image1.png", "img/chat/image13.png"],
-      "chat/hemodialise": ["img/chat/image13.png"],
-      "chat/acessos": ["img/chat/image2.png", "img/chat/image15.png"],
-      "chat/cuidados": ["img/chat/image16.png"],
-      "chat/emocional": ["img/chat/image14.png"],
+      "chat/diabetes": ["../img/chat/image17.png"],
+      "chat/sintomas": [
+        "../img/chat/image5.png",
+        "../img/chat/image8.png",
+        "../img/chat/image10.png",
+        "../img/chat/image9.png",
+      ],
+      "chat/exames": ["../img/chat/image7.png"],
+      "chat/tratamentos": ["../img/chat/image1.png", "../img/chat/image13.png"],
+      "chat/hemodialise": ["../img/chat/image13.png"],
+      "chat/acessos": ["../img/chat/image2.png", "../img/chat/image15.png"],
+      "chat/cuidados": ["../img/chat/image16.png"],
+      "chat/emocional": ["../img/chat/image14.png"],
     };
 
+    /* =========================================================
+   1.1) Pergunta -> IMAGENS
+   ========================================================= */
     const QUESTION_IMAGE_RAW = {
       "Quais são os principais fatores de risco para DRC?": ["chat/diabetes"],
+      "Quais são os principais fatores de risco para a doença renal crônica?": ["chat/diabetes"],
+      "Quais são os riscos que podem causar a DRC?": ["chat/diabetes"],
+      "O que pode aumentar o risco de desenvolver DRC?": ["chat/diabetes"],
+      "Quais são as causas comuns da doença renal crônica?": ["chat/diabetes"],
+      "O que pode levar alguém a ter DRC?": ["chat/diabetes"],
+      "Quais são os fatores que contribuem para a doença renal crônica?": ["chat/diabetes"],
+      "Que condições aumentam o risco de DRC?": ["chat/diabetes"],
+      "Quais são os principais motivos que levam à doença renal crônica?": ["chat/diabetes"],
+      "O que pode fazer com que uma pessoa desenvolva DRC?": ["chat/diabetes"],
+      "Quais são os principais fatores que podem causar problemas renais crônicos?": ["chat/diabetes"],
+
       "Quais são os sintomas comuns da DRC?": ["chat/sintomas"],
+      "Poderia me informar quais são os sintomas comuns da Doença Renal Crônica?": ["chat/sintomas"],
+      "Quais são os sinais típicos da DRC?": ["chat/sintomas"],
+      "Você sabe quais sintomas geralmente aparecem em casos de Doença Renal Crônica?": ["chat/sintomas"],
+      "Quais sintomas são frequentemente associados à DRC?": ["chat/sintomas"],
+      "Quais são os sintomas mais comuns observados em pacientes com Doença Renal Crônica?": ["chat/sintomas"],
+      "Que sintomas a DRC costuma apresentar?": ["chat/sintomas"],
+      "Pode me dizer quais são os sintomas habituais da Doença Renal Crônica?": ["chat/sintomas"],
+      "Quais são os sintomas característicos da DRC?": ["chat/sintomas"],
+      "Quais são os sintomas predominantes da Doença Renal Crônica?": ["chat/sintomas"],
+
       "Como é feito o diagnóstico da DRC?": ["chat/exames"],
+      "Quais são os métodos usados para diagnosticar a Doença Renal Crônica?": ["chat/exames"],
+      "Como os médicos determinam se alguém tem Doença Renal Crônica?": ["chat/exames"],
+      "Quais são os critérios clínicos e laboratoriais para o diagnóstico da Doença Renal Crônica?": ["chat/exames"],
+      "Quais são os exames e procedimentos mais eficazes para diagnosticar a Doença Renal Crônica?": ["chat/exames"],
+      "Descreva os diferentes exames utilizados no diagnóstico da Doença Renal Crônica": ["chat/exames"],
+      "Quais são os sinais e sintomas que indicam a necessidade de investigar a presença de Doença Renal Crônica?": ["chat/exames"],
+      "Como é realizado o diagnóstico da Doença Renal Crônica em diferentes estágios da doença?": ["chat/exames"],
+      "Quais são os métodos padrão e alternativos para diagnosticar a Doença Renal Crônica?": ["chat/exames"],
+      "Pode explicar como é feito o diagnóstico da Doença Renal Crônica?": ["chat/exames"],
+      "Quais são os avanços recentes no diagnóstico da Doença Renal Crônica?": ["chat/exames"],
+
       "Quais são os tratamentos disponíveis para DRC?": ["chat/tratamentos"],
+      "Quais são os tratamentos oferecidos para Doença Renal Crônica?": ["chat/tratamentos"],
+      "Quais opções de tratamento existem para DRC?": ["chat/tratamentos"],
+      "Que tipos de tratamento estão disponíveis para a Doença Renal Crônica?": ["chat/tratamentos"],
+      "Pode me informar sobre os tratamentos para DRC?": ["chat/tratamentos"],
+      "Quais são as terapias disponíveis para a Doença Renal Crônica?": ["chat/tratamentos"],
+      "Quais são os métodos de tratamento para a DRC?": ["chat/tratamentos"],
+      "O que está disponível em termos de tratamento para Doença Renal Crônica?": ["chat/tratamentos"],
+      "Quais tratamentos podem ser utilizados para a DRC?": ["chat/tratamentos"],
+      "Quais são as abordagens terapêuticas para Doença Renal Crônica?": ["chat/tratamentos"],
+      "Quais são as opções de tratamento atuais para DRC?": ["chat/tratamentos"],
+
       "O que é hemodiálise?": ["chat/hemodialise"],
+      "O que significa hemodiálise?": ["chat/hemodialise"],
+      "Para que serve a hemodiálise?": ["chat/hemodialise"],
+      "Como funciona a hemodiálise?": ["chat/hemodialise"],
+      "Quando uma pessoa precisa fazer hemodiálise?": ["chat/hemodialise"],
+      "O que acontece durante uma sessão de hemodiálise?": ["chat/hemodialise"],
+      "Por que alguém faria hemodiálise?": ["chat/hemodialise"],
+      "A hemodiálise dói?": ["chat/hemodialise"],
+      "Quanto tempo dura uma sessão de hemodiálise?": ["chat/hemodialise"],
+      "Quais são os riscos da hemodiálise?": ["chat/hemodialise"],
+      "A hemodiálise pode curar problemas nos rins?": ["chat/hemodialise"],
+
       "Quais os tipos de acessos para fazer hemodiálise?": ["chat/acessos"],
+      "Quais são as formas de se conectar à máquina de hemodiálise?": ["chat/acessos"],
+      "Como é feito o acesso para a hemodiálise?": ["chat/acessos"],
+      "Que tipos de acessos existem para fazer hemodiálise?": ["chat/acessos"],
+      "Quais são os métodos de acesso para hemodiálise?": ["chat/acessos"],
+      "Como os pacientes são ligados à máquina de hemodiálise": ["chat/acessos"],
+      "Quais os tipos de acessos usados na hemodiálise?": ["chat/acessos"],
+      "Que tipo de acesso é necessário para hemodiálise?": ["chat/acessos"],
+      "Como o sangue é acessado para a hemodiálise?": ["chat/acessos"],
+      "Quais são as opções de acesso para quem precisa fazer hemodiálise?": ["chat/acessos"],
+
       "Quais os cuidados após a sessão de hemodiálise?": ["chat/cuidados"],
+      "O que devo fazer depois da hemodiálise?": ["chat/cuidados"],
+      "Quais cuidados preciso ter depois da hemodiálise?": ["chat/cuidados"],
+      "Como devo me cuidar após uma sessão de hemodiálise?": ["chat/cuidados"],
+      "O que evitar após fazer hemodiálise?": ["chat/cuidados"],
+      "Quais são os cuidados pós-hemodiálise?": ["chat/cuidados"],
+      "Tem alguma recomendação para depois da hemodiálise?": ["chat/cuidados"],
+      "Como posso me sentir após a hemodiálise e o que devo fazer?": ["chat/cuidados"],
+      "Há restrições após a hemodiálise?": ["chat/cuidados"],
+      "Preciso tomar algum cuidado especial após a hemodiálise?": ["chat/cuidados"],
+
       "Como lidar com o impacto emocional da DRC?": ["chat/emocional"],
     };
     
@@ -470,19 +552,19 @@
        1.2) VÍDEOS
        ========================================================= */
     const QUESTION_VIDEO_RAW = {
-      "Como faço para seguir o tratamento de hemodiálise?": ["p-mXfadnpZI"],
-      "Como deve ser o estilo de vida/ou dia a dia da pessoa que realiza hemodiálise?": ["GLOPWxBZ7TM"],
-      "Como deve ser a alimentação de pessoas que realizam hemodiálise?": ["tiASHRuCJls"],
-      "Como saber a quantidade de líquido que pode ser ingerida por dia para quem realiza hemodiálise?": ["--Zu7zX7N8E"],
-      "Como aliviar a sede em pessoas com restrição de líquidos?": ["-79LGgPbkU8"],
-      "O que é a fístula arteriovenosa (FAV)?": ["XM5sCXTrIik"],
-      "Como cuidar da fístula arteriovenosa?": ["fI9efWh_xTU"],
-      "Quais os cuidados com o cateter venoso central?": ["1t6ILKI_6ck"],
-      "O que é o cateter venoso central para hemodiálise?": ["1t6ILKI_6ck"],
-      "Quais os cuidados com o curativo do cateter para hemodiálise?": ["zjRKTzaiYmU"],
-      "Quais os cuidados com as medicações?": ["LMC7cjPIXSA"],
-      "Faço hemodiálise preciso ser acompanhado por outros profissionais da saúde?": ["h-Dzl6IJ4DA"],
-    };
+        "Como faço para seguir o tratamento de hemodiálise?": ["p-mXfadnpZI"],
+        "Como deve ser o estilo de vida/ou dia a dia da pessoa que realiza hemodiálise?": ["GLOPWxBZ7TM"],
+        "Como deve ser a alimentação de pessoas que realizam hemodiálise?": ["tiASHRuCJls"],
+        "Como saber a quantidade de líquido que pode ser ingerida por dia para quem realiza hemodiálise?": ["--Zu7zX7N8E"],
+        "Como aliviar a sede em pessoas com restrição de líquidos?": ["-79LGgPbkU8"],
+        "O que é a fístula arteriovenosa (FAV)?": ["XM5sCXTrIik"],
+        "Como cuidar da fístula arteriovenosa?": ["fI9efWh_xTU"],
+        "Quais os cuidados com o cateter venoso central?": ["1t6ILKI_6ck"],
+        "O que é o cateter venoso central para hemodiálise?": ["1t6ILKI_6ck"],
+        "Quais os cuidados com o curativo do cateter para hemodiálise?": ["zjRKTzaiYmU"],
+        "Quais os cuidados com as medicações?": ["LMC7cjPIXSA"],
+        "Faço hemodiálise preciso ser acompanhado por outros profissionais da saúde?": ["h-Dzl6IJ4DA"],
+      };
     
     const QUESTION_VIDEO_MAP = {};
     for (const [q, vids] of Object.entries(QUESTION_VIDEO_RAW)) {
