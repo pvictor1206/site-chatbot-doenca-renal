@@ -1146,7 +1146,7 @@ body.noscroll { overflow: hidden; }
   }
 
   /* CONTATOS */
-  .class-contatos{ padding: 32px 16px }
+  .class-contatos{ padding: 32px 160px }
   .contato-container{
     max-width: 100%;
     flex-direction: column;
@@ -1277,3 +1277,12 @@ body.noscroll { overflow: hidden; }
 
 
 
+.footer-content {
+    background-color: #6c757d; /* A cor cinza que já está na imagem */
+    color: white;              /* A cor do texto */
+    text-align: center;        /* Centraliza o texto horizontalmente */
+    
+    /* AQUI ESTÁ O QUE AUMENTA O TAMANHO: */
+    padding-top: 100px;         /* Espaço acima do texto */
+    padding-bottom: 20px;      /* Espaço abaixo do texto */
+}
