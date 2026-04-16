@@ -352,6 +352,16 @@
             gap: 15px;
         }
 
+        /* Estilo para quando o chat estiver expandido */
+        #chat-window.chat-expanded {
+            width: 100vw !important;
+            height: 100vh !important;
+            bottom: 0 !important;
+            right: 0 !important;
+            border-radius: 0 !important;
+            z-index: 9999; /* Garante que cubra a tela toda e fique por cima de tudo */
+        }
+
         .message-wrapper { display: flex; width: 100%; }
         .message-wrapper.user { justify-content: flex-end; }
         
@@ -361,8 +371,9 @@
             margin:8px 0;
             border-radius:18px;
             line-height:1.45;
-            font-size:15px;
+            font-size: var(--chat-fs); /* Usa a variável controlada pelos botões */
             word-wrap:break-word;
+            transition: font-size 0.2s ease; /* Adiciona uma animação suave ao mudar de tamanho */
         }
 
         /* usuário */
@@ -395,8 +406,9 @@
 
         .bot-message h3{
             margin: 0 0 8px 0;
-            font-size: 18px;
+            font-size: calc(var(--chat-fs) + 4px); /* Fica sempre 4px maior que o texto normal */
             color: #0288D1;
+            transition: font-size 0.2s ease;
         }
 
         .bot-message p{
@@ -674,6 +686,7 @@
             <div class="chat-controls">
                 <button onclick="increaseChatFontSize()" title="Aumentar Fonte">A+</button>
                 <button onclick="decreaseChatFontSize()" title="Diminuir Fonte">A-</button>
+                <button onclick="toggleExpandChat()" title="Expandir/Reduzir Chat" id="btn-expand"><i class="fa-solid fa-expand"></i></button>
                 <button onclick="closeChat()" title="Fechar Chat"><i class="fa-solid fa-xmark"></i></button>
             </div>
         </div>
@@ -1211,6 +1224,31 @@ REGRAS:
                 chatInput.focus();
 
             }, 500);
+        }
+
+        // ==========================================
+        // Função para Expandir/Reduzir o Chat
+        // ==========================================
+        window.toggleExpandChat = function() {
+            const chatWin = document.getElementById("chat-window");
+            const btnIcon = document.querySelector("#btn-expand i");
+            
+            // Adiciona ou remove a classe que deixa o chat em tela cheia
+            chatWin.classList.toggle("chat-expanded");
+            
+            // Troca o ícone de expandir para o de comprimir
+            if (chatWin.classList.contains("chat-expanded")) {
+                btnIcon.classList.remove("fa-expand");
+                btnIcon.classList.add("fa-compress");
+                document.body.classList.add("noscroll"); // Trava a rolagem da página por trás
+            } else {
+                btnIcon.classList.remove("fa-compress");
+                btnIcon.classList.add("fa-expand");
+                // Só destrava a rolagem se não estiver no celular (pois o celular já usa noscroll no chat normal)
+                if(window.innerWidth >= 768) {
+                    document.body.classList.remove("noscroll");
+                }
+            }
         }
     </script>
 </body>
