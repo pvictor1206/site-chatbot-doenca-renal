@@ -293,7 +293,6 @@
         footer h3 {
             color: var(--primary-color);
             font-size: 1.5rem;
-            margin-bottom: 20px;
         }
 
         footer p {
@@ -356,25 +355,70 @@
         .message-wrapper { display: flex; width: 100%; }
         .message-wrapper.user { justify-content: flex-end; }
         
-        .message {
-            max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: var(--chat-fs);
-            line-height: 1.4;
-            word-wrap: break-word;
+        .message{
+            max-width:82%;
+            padding:12px 16px;
+            margin:8px 0;
+            border-radius:18px;
+            line-height:1.45;
+            font-size:15px;
+            word-wrap:break-word;
         }
 
-        .bot-message {
-            background-color: white;
-            border: 1px solid #eee;
-            border-top-left-radius: 2px;
-        }
-
-        .user-message {
-            background-color: var(--primary-color);
+        /* usuário */
+        .message.user {
+            background: #4FC3F7;
             color: white;
-            border-top-right-radius: 2px;
+            margin-left: auto;
+            border-bottom-right-radius: 6px;
+        }
+
+        /* BOT */
+        .message.bot {
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+            margin-right: auto;
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .bot-message{
+            background:#ffffff;
+            color:#333;
+            border:1px solid #e5e5e5;
+            border-bottom-left-radius:6px;
+            margin-right:auto;
+            box-shadow:0 2px 6px rgba(0,0,0,.08);
+        }
+
+
+        .bot-message h3{
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #0288D1;
+        }
+
+        .bot-message p{
+            margin: 6px 0;
+            
+        }
+
+        .bot-message ul{
+            margin: 8px 0;
+            padding-left: 18px;
+        }
+
+        .bot-message li{
+            margin: 4px 0;
+            line-height: 1.4;
+        }
+
+        .user-message{
+            background:#4FC3F7;
+            color:white;
+            border-bottom-right-radius:6px;
+            margin-left:auto;
         }
 
         /* --- BARRA DE ACÕES RÁPIDAS NO CHAT --- */
@@ -733,30 +777,203 @@
         // TEXTOS NA ÍNTEGRA DA BASE DE DADOS
         // ==========================================
         const baseDeDados = {
-            "[DOENCA_RENAL]": `A Doença Renal Crônica (DRC) é a perda progressiva e irreversível da função dos rins. \n\nQuando os rins não funcionam bem, ocorre a acumulação de toxinas e líquidos no nosso corpo, o que pode causar inchaço, pressão alta e fraqueza.\nO tratamento inclui uma dieta adequada, uso correto das medicações e, nas fases mais avançadas, a necessidade de terapia de substituição renal, como a hemodiálise.`,
-            
-            "[HEMODIALISE]": `A hemodiálise é um tratamento que funciona como um "rim artificial". \n\nDurante a sessão, o seu sangue passa por uma máquina com um filtro especial que retira as toxinas (como ureia e creatinina) e o excesso de água e sais minerais do corpo, devolvendo o sangue limpo ao seu organismo.\nÉ um tratamento fundamental para manter o equilíbrio do seu corpo e garantir qualidade de vida.`,
-            
-            "[ALIMENTACAO]": `Na hemodiálise, a alimentação precisa de cuidados muito especiais!\n\n• Evite alimentos ricos em Potássio (como banana, laranja, melão, feijão e tomate), pois o excesso pode causar problemas graves no coração.\n• Controle o Fósforo (presente no leite, queijos, refrigerantes de cola e embutidos), para evitar fraqueza nos ossos e comichão na pele.\n• Reduza o consumo de Sal, pois ele aumenta a pressão arterial e provoca muita sede.\nSiga sempre as orientações do seu nutricionista!`,
-            
-            "[CATETER]": `O cateter de hemodiálise é um tubo colocado numa veia de grande calibre (geralmente no pescoço ou no peito).\n\nCuidados importantes:\n• Mantenha o curativo sempre limpo e seco.\n• Durante o banho, proteja a região com plástico para não molhar o curativo.\n• Nunca mexa no curativo em casa nem tente abrir o cateter.\n• Caso sinta dor, veja vermelhidão, sangramento ou saída de pus, avise a equipa de enfermagem imediatamente.`,
-            
-            "[FISTULA]": `A Fístula Arteriovenosa (FAV) é a ligação de uma artéria com uma veia, geralmente no braço, feita através de uma pequena cirurgia.\n\nCuidados importantes:\n• Lave o braço da fístula com água e sabão neutro antes de entrar na sala de diálise.\n• Não verifique a pressão arterial nem permita a recolha de sangue nesse braço.\n• Não durma sobre o braço da fístula e evite pegar em pesos pesados.\n• Sinta o "tremor" (frêmito) todos os dias passando a mão suavemente para confirmar que está a funcionar.`,
-            
-            "[LIQUIDOS]": `O controlo de líquidos é vital! O excesso de líquidos entre as sessões sobrecarrega o seu coração e os pulmões.\n\nDicas práticas:\n• Beba apenas a quantidade de água recomendada pelo seu médico.\n• Evite alimentos salgados, pois dão mais sede.\n• Em vez de beber muita água de uma vez, experimente usar cubos de gelo, chupar uma rodela de limão ou usar um spray de água para humedecer a boca.`,
-            
-            "[PESO]": `O "peso seco" é o seu peso ideal no final de uma sessão de hemodiálise, quando está sem excesso de líquidos no corpo e a sua pressão está normal.\n\nÉ muito importante controlar o ganho de peso entre uma sessão e outra. O ganho de peso não deve ultrapassar cerca de 3% a 5% do seu peso seco. Ganhar muito peso significa que o corpo reteve muito líquido, o que dificulta a sessão de hemodiálise, podendo causar cãibras e quedas de pressão.`,
-            
-            "[MEDICACOES]": `É muito importante tomar as suas medicações exatamente como o médico prescreveu!\n\n• Alguns remédios (como os quelantes de fósforo) devem ser tomados junto com as refeições.\n• Os remédios para a pressão alta podem precisar de ajuste nos dias de diálise (consulte o seu médico).\n• Nunca tome medicamentos por conta própria, especialmente analgésicos e anti-inflamatórios, pois podem ser prejudiciais.`,
-            
-            "[FATORES_RISCO]": `Os principais fatores de risco que levam ou agravam a Doença Renal Crônica são:\n\n• Pressão alta (Hipertensão) não controlada;\n• Diabetes mellitus com níveis altos de açúcar no sangue;\n• Uso contínuo de medicamentos sem receita (como anti-inflamatórios);\n• Histórico familiar de doença renal;\n• Obesidade e o hábito de fumar.`,
-            
-            "[ADESAO]": `Tenha uma boa adesão ao tratamento é essencial para a qualidade de vida, para isso alguns cuidados são necessários, como:\n• Perceber o tratamento como essencial para a saúde.\n• Não faltar às sessões de hemodiálise e cumprir todo o tempo da terapia.\n• Seguir as restrições alimentares e de líquidos recomendadas.\n• Fazer uso regular das medicações receitadas pela equipa de saúde.`,
-            
-            "[ACOMPANHAMENTO]": `É importante o acompanhamento com todos os profissionais de saúde com realização das consultas agendadas e sempre que necessário:\n• Médico: conforme rotina e sempre que surgir intercorrências;\n• Enfermeiro: para receber orientações sobre os cuidados necessários, como com a fístula arteriovenosa ou o cateter central e outros;\n• Nutricionista: verificar o ganho ou a perda de peso e ter dieta direcionada para o caso de cada pessoa;\n• Psicológico: melhor adaptação, aceitação, autoimagem e bem-estar do paciente;\n• Fisioterapeuta: Exercícios durante a sessão auxiliam na reabilitação e melhora a qualidade de vida.\n• Dentista: manutenção da saúde bucal;\n• A realização de exames de rotina é necessária para quem realiza hemodiálise para identificar a presença de anemia, infecções virais, colesterol e outros.\n\nCaso tenha dúvidas, procure o serviço de hemodiálise ou os profissionais de saúde que te acompanham.`,
-            
-            "[DESCONHECIDO]": `Desculpe, não encontrei essa informação no meu roteiro de enfermagem. Por favor, utilize o botão "Ver Tópicos" acima ou tente reformular a pergunta com palavras mais curtas (ex: "fístula", "peso", "dieta").`
-        };
+                "[DOENCA_RENAL]": `
+                    <h3>Doença Renal Crônica (DRC)</h3>
+                    <p>
+                        A Doença Renal Crônica é a perda progressiva e irreversível da função dos rins.
+                    </p>
+
+                    <p>
+                        Quando os rins não funcionam bem, ocorre acúmulo de toxinas e líquidos no organismo, podendo causar:
+                    </p>
+
+                    <ul>
+                        <li>Inchaço;</li>
+                        <li>Pressão alta;</li>
+                        <li>Fraqueza;</li>
+                        <li>Alterações no corpo.</li>
+                    </ul>
+
+                    <p>
+                        O tratamento pode incluir alimentação adequada, uso correto das medicações e, em fases avançadas, hemodiálise.
+                    </p>
+                `,
+
+                "[HEMODIALISE]": `
+                    <h3>Hemodiálise</h3>
+
+                    <p>
+                        A hemodiálise funciona como um <strong>rim artificial</strong>.
+                    </p>
+
+                    <p>
+                        Durante a sessão:
+                    </p>
+
+                    <ul>
+                        <li>O sangue passa por uma máquina;</li>
+                        <li>Um filtro remove toxinas como ureia e creatinina;</li>
+                        <li>Retira excesso de água e sais minerais;</li>
+                        <li>O sangue limpo retorna ao corpo.</li>
+                    </ul>
+
+                    <p>
+                        É um tratamento essencial para manter equilíbrio e qualidade de vida.
+                    </p>
+                `,
+
+                "[ALIMENTACAO]": `
+                    <h3>Alimentação na Hemodiálise</h3>
+
+                    <p>Alguns cuidados são muito importantes:</p>
+
+                    <ul>
+                        <li><strong>Evite potássio:</strong> banana, laranja, melão, feijão, tomate;</li>
+                        <li><strong>Controle fósforo:</strong> leite, queijos, refrigerante cola, embutidos;</li>
+                        <li><strong>Reduza o sal:</strong> ajuda no controle da pressão e sede;</li>
+                        <li>Siga a orientação do nutricionista.</li>
+                    </ul>
+                `,
+
+                "[CATETER]": `
+                    <h3>Cuidados com Cateter</h3>
+
+                    <p>
+                        O cateter é um tubo colocado em uma veia grande, geralmente no pescoço ou peito.
+                    </p>
+
+                    <ul>
+                        <li>Mantenha o curativo limpo e seco;</li>
+                        <li>Proteja no banho;</li>
+                        <li>Não mexa no cateter em casa;</li>
+                        <li>Observe dor, vermelhidão ou pus.</li>
+                    </ul>
+
+                    <p>
+                        Em caso de sinais de infecção, avise a equipe de saúde.
+                    </p>
+                `,
+
+                "[FISTULA]": `
+                    <h3>Fístula Arteriovenosa (FAV)</h3>
+
+                    <p>
+                        É a ligação entre uma artéria e uma veia, geralmente no braço.
+                    </p>
+
+                    <ul>
+                        <li>Lave o braço antes da diálise;</li>
+                        <li>Não medir pressão nesse braço;</li>
+                        <li>Não coletar sangue nesse braço;</li>
+                        <li>Evite peso excessivo;</li>
+                        <li>Sinta diariamente o frêmito.</li>
+                    </ul>
+                `,
+
+                "[LIQUIDOS]": `
+                    <h3>Controle de Líquidos</h3>
+
+                    <p>
+                        O excesso de líquidos pode sobrecarregar coração e pulmões.
+                    </p>
+
+                    <ul>
+                        <li>Beba somente a quantidade orientada;</li>
+                        <li>Evite alimentos salgados;</li>
+                        <li>Use gelo ou limão para aliviar sede;</li>
+                        <li>Controle o ganho de peso.</li>
+                    </ul>
+                `,
+
+                "[PESO]": `
+                    <h3>Peso Seco</h3>
+
+                    <p>
+                        É o peso ideal ao final da sessão, sem excesso de líquidos.
+                    </p>
+
+                    <p>
+                        O ganho entre sessões deve ficar entre <strong>3% e 5%</strong>.
+                    </p>
+
+                    <p>
+                        Ganho excessivo pode causar:
+                    </p>
+
+                    <ul>
+                        <li>Cãibras;</li>
+                        <li>Queda de pressão;</li>
+                        <li>Dificuldade na diálise.</li>
+                    </ul>
+                `,
+
+                "[MEDICACOES]": `
+                    <h3>Medicações</h3>
+
+                    <ul>
+                        <li>Tome conforme prescrição médica;</li>
+                        <li>Alguns remédios devem ser usados com refeições;</li>
+                        <li>Medicamentos da pressão podem mudar em dias de diálise;</li>
+                        <li>Nunca se automedique.</li>
+                    </ul>
+                `,
+
+                "[FATORES_RISCO]": `
+                    <h3>Fatores de Risco</h3>
+
+                    <ul>
+                        <li>Pressão alta;</li>
+                        <li>Diabetes;</li>
+                        <li>Obesidade;</li>
+                        <li>Uso frequente de remédios sem orientação;</li>
+                        <li>Tabagismo;</li>
+                        <li>Histórico familiar.</li>
+                    </ul>
+                `,
+
+                "[ADESAO]": `
+                    <h3>Adesão ao Tratamento</h3>
+
+                    <ul>
+                        <li>Não faltar sessões;</li>
+                        <li>Completar o tempo da diálise;</li>
+                        <li>Seguir dieta orientada;</li>
+                        <li>Controlar líquidos;</li>
+                        <li>Usar medicações corretamente.</li>
+                    </ul>
+                `,
+
+                "[ACOMPANHAMENTO]": `
+                    <h3>Acompanhamento Profissional</h3>
+
+                    <p>É importante manter acompanhamento com:</p>
+
+                    <ul>
+                        <li>Médico;</li>
+                        <li>Enfermeiro;</li>
+                        <li>Nutricionista;</li>
+                        <li>Psicólogo;</li>
+                        <li>Fisioterapeuta;</li>
+                        <li>Dentista.</li>
+                    </ul>
+
+                    <p>
+                        Exames de rotina também são fundamentais.
+                    </p>
+                `,
+
+                "[DESCONHECIDO]": `
+                    <h3>Informação não encontrada</h3>
+
+                    <p>
+                        Desculpe, não encontrei essa informação no meu roteiro de enfermagem.
+                    </p>
+
+                    <p>
+                        Use o botão <strong>Ver Tópicos</strong> ou reformule sua pergunta.
+                    </p>
+                `
+            };
 
         // ==========================================
         // ASSOCIAÇÃO DE IMAGENS POR ETIQUETA
@@ -788,8 +1005,13 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender === 'user' ? 'user-message' : 'bot-message'}`;
             
-            // O replace garante que as quebras de linha funcionam no HTML, sem afetar blocos HTML injectados
-            messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+           // Aplica a quebra de linha com <br> apenas para as mensagens do usuário (texto puro).
+            // As mensagens do bot já vêm com marcação HTML (<p>, <h3>, <ul>) diretamente da baseDeDados.
+            if (sender === 'user') {
+                messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+            } else {
+                messageDiv.innerHTML = text;
+            }
 
             if (images && images.length > 0) {
                 const imgContainer = document.createElement('div');
@@ -818,8 +1040,92 @@
         }
 
         // ==========================================
+        // CLASSIFICADOR POR IA
+        // ==========================================
+
+        async function classificarComIA(pergunta) {
+                const apiKey = "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";
+
+                const resposta = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        temperature: 0,
+                        messages: [
+                            {
+                                role: "system",
+                                content: `
+            Você é um classificador de perguntas de pacientes em hemodiálise.
+
+Sua tarefa é analisar a mensagem do usuário e responder SOMENTE com UMA TAG da lista abaixo.
+
+TAGS DISPONÍVEIS:
+
+[DOENCA_RENAL]
+Perguntas sobre rins, função renal, insuficiência renal, doença renal crônica, creatinina, ureia.
+
+[HEMODIALISE]
+Perguntas sobre sessão de hemodiálise, máquina, tratamento, filtro, tempo de diálise.
+
+[ALIMENTACAO]
+Perguntas sobre comida, frutas, dieta, banana, leite, sal, potássio, fósforo, nutricionista.
+
+[CATETER]
+Perguntas sobre cateter, curativo, dor no pescoço, acesso venoso, infecção no cateter.
+
+[FISTULA]
+Perguntas sobre fístula, braço inchado, frêmito, acesso no braço, cirurgia no braço.
+
+[LIQUIDOS]
+Perguntas sobre água, sede, beber líquidos, retenção, inchaço.
+
+[PESO]
+Perguntas sobre peso seco, balança, engordar entre sessões, ganho de peso.
+
+[MEDICACOES]
+Perguntas sobre remédios, comprimidos, pressão alta, tomar medicamento.
+
+[FATORES_RISCO]
+Perguntas sobre causas da doença renal, diabetes, pressão alta, risco.
+
+[ADESAO]
+Perguntas sobre faltar sessão, seguir tratamento, disciplina, rotina.
+
+[ACOMPANHAMENTO]
+Perguntas sobre médico, enfermeiro, nutricionista, psicólogo, exames.
+
+Se a mensagem não combinar claramente:
+[DESCONHECIDO]
+
+REGRAS:
+- Responda apenas a TAG.
+- Nunca explique.
+- Nunca escreva frases.
+- Nunca invente TAG nova.
+- Retorne somente 1 TAG.
+            `
+                            },
+                            {
+                                role: "user",
+                                content: pergunta
+                            }
+                        ]
+                    })
+                });
+
+                const data = await resposta.json();
+
+                return data.choices[0].message.content.trim();
+            }
+
+        // ==========================================
         // CLASSIFICADOR LOCAL POR PALAVRAS-CHAVE
         // ==========================================
+        /*
         function classifyIntentLocally(message) {
             const msg = message.toLowerCase();
             if (msg.includes("doença renal") || msg.includes("drc") || msg.includes("o que é a doença")) return "[DOENCA_RENAL]";
@@ -834,7 +1140,7 @@
             if (msg.includes("adesão") || msg.includes("seguir") || msg.includes("tratamento")) return "[ADESAO]";
             if (msg.includes("acompanhamento") || msg.includes("médico") || msg.includes("profissionais") || msg.includes("doutor")) return "[ACOMPANHAMENTO]";
             return "[DESCONHECIDO]";
-        }
+        }*/
 
         window.sendMessage = function() {
             const text = chatInput.value.trim();
@@ -867,21 +1173,23 @@
             typingIndicator.style.display = 'block';
             chatBody.scrollTop = chatBody.scrollHeight;
 
-            // Simula o tempo de resposta da "IA" local
-            setTimeout(() => {
-                const label = classifyIntentLocally(text);
+            setTimeout(async () => {
                 typingIndicator.style.display = 'none';
 
-                const botText = baseDeDados[label];
-                const matchedImages = IMAGENS_POR_TOPICO[label] || [];
-                
-                appendMessageToUI('bot', botText, matchedImages);
+                try {
+                    const label = await classificarComIA(text);
+                    const botText = baseDeDados[label] || baseDeDados["[DESCONHECIDO]"];
+                    appendMessageToUI('bot', botText);
+
+                } catch (erro) {
+                    appendMessageToUI('bot', baseDeDados["[DESCONHECIDO]"]);
+                }
 
                 chatInput.disabled = false;
                 sendBtn.disabled = false;
                 chatInput.focus();
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }, 1000);
+
+            }, 500);
         }
     </script>
 </body>
