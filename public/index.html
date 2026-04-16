@@ -632,10 +632,6 @@
                     <i class="fa-solid fa-pills"></i>
                     <span>Medicações</span>
                 </div>
-                <div class="topic-card" onclick="askTopic('Dicas práticas de consumo de líquidos')">
-                    <i class="fa-solid fa-lightbulb"></i>
-                    <span>Dicas consumo líquidos</span>
-                </div>
                 <div class="topic-card" onclick="askTopic('Como faço o cálculo do meu peso seco recomendado?')">
                     <i class="fa-solid fa-calculator"></i>
                     <span>Cálculo de Peso</span>
@@ -1093,7 +1089,7 @@ Perguntas sobre remédios, comprimidos, pressão alta, tomar medicamento.
 Perguntas sobre causas da doença renal, diabetes, pressão alta, risco.
 
 [ADESAO]
-Perguntas sobre faltar sessão, seguir tratamento, disciplina, rotina.
+Perguntas sobre faltar sessão, seguir tratamento, disciplina, rotina, adesão ao tratamento.
 
 [ACOMPANHAMENTO]
 Perguntas sobre médico, enfermeiro, nutricionista, psicólogo, exames.
@@ -1177,9 +1173,34 @@ REGRAS:
                 typingIndicator.style.display = 'none';
 
                 try {
-                    const label = await classificarComIA(text);
+                    // === INÍCIO DO NOVO CÓDIGO DE ATALHOS ===
+                    let label = "";
+
+                    const atalhosExatos = {
+                        "O que é a Doença Renal Crônica?": "[DOENCA_RENAL]",
+                        "Fale-me sobre Hemodiálise": "[HEMODIALISE]",
+                        "Como deve ser a alimentação na hemodiálise?": "[ALIMENTACAO]",
+                        "Quais os cuidados com o Cateter de Hemodiálise?": "[CATETER]",
+                        "O que é e como cuidar da Fístula Arteriovenosa?": "[FISTULA]",
+                        "Dicas sobre o consumo de líquidos": "[LIQUIDOS]",
+                        "Dicas práticas de consumo de líquidos": "[LIQUIDOS]",
+                        "Qual a importância do controle de peso?": "[PESO]",
+                        "Como faço o cálculo do meu peso seco recomendado?": "[PESO]",
+                        "Dúvidas sobre medicações": "[MEDICACOES]",
+                        "Quais são os Fatores de Risco para doença renal?": "[FATORES_RISCO]",
+                        "Preciso de acompanhamento de outros profissionais?": "[ACOMPANHAMENTO]",
+                        "Como faço para seguir o tratamento?": "[ADESAO]"
+                    };
+
+                    if (atalhosExatos[text]) {
+                        label = atalhosExatos[text];
+                    } else {
+                        label = await classificarComIA(text);
+                    }
+
                     const botText = baseDeDados[label] || baseDeDados["[DESCONHECIDO]"];
                     appendMessageToUI('bot', botText);
+                    // === FIM DO NOVO CÓDIGO DE ATALHOS ===
 
                 } catch (erro) {
                     appendMessageToUI('bot', baseDeDados["[DESCONHECIDO]"]);
