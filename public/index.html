@@ -582,8 +582,8 @@
     <section class="hero">
         <div class="container hero-content">
             <div class="hero-text">
-                <h1>Conversar sobre a sua saúde nunca foi tão fácil</h1>
-                <p>Camila, nossa enfermeira virtual, tem como objetivo transmitir orientações sobre autocuidado para pessoas em hemodiálise.</p>
+                <h1>Conversar sobre sua saúde agora é mais fácil</h1>
+                <p>Camila, nossa enfermeira virtual realiza orientações sobre autocuidado para pessoas com doença renal crônica em hemodiálise</p>
             </div>
             <div class="hero-image">
                 <img src="img/enfermeira03.png" alt="Enfermeira Camila">
@@ -594,7 +594,7 @@
     <!-- Secção: Conheça a Camila -->
     <section class="meet-camila">
         <div class="container">
-            <h2>Conheça a Camila</h2>
+            <h2>Conheça mais sobre a Doença Renal Crônica e Hemodiálise</h2>
             <p class="description">
                 <strong>Olá! Como você está?</strong> Estou aqui para ajudar na compreensão sobre autocuidado.<br><br>
                 <strong>Como eu funciono:</strong><br>
@@ -1053,17 +1053,18 @@
         // ==========================================
 
         async function classificarComIA(pergunta) {
-            // 1. COLOQUE SUA CHAVE AQUI
-            const API_KEY = "SUA_CHAVE_AQUI"; 
-            const MODELO = "gemini-1.5-flash";
-            const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODELO}:generateContent?key=${API_KEY}`;
+            // 1. COLOQUE SUA CHAVE DO GEMINI AQUI
+            // 1. SUA CHAVE DO GEMINI
+            const API_KEY = "AIzaSyAuf5hZeG4WuC66DSOFAZryfi5B-VgcWYY";
+            // Alterado para v1beta e gemini-flash-latest conforme o curl
+            const URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
             // O Prompt de Sistema (Contexto) que você já definiu
             const systemPrompt = `
             
             Você atua como um Agente de Saúde Virtual. Seu público-alvo são pessoas em tratamento de hemodiálise e com Doença Renal Crônica (DRC). Sua regra de ouro inquebrável é: você NUNCA deve inventar informações, prescrever tratamentos médicos ou deduzir respostas. Todas as suas interações devem ser baseadas estritamente na base de conhecimento fornecida abaixo. Se o paciente perguntar algo que não conste no material, você deve responder com a seguinte frase padrão: "Compreendo sua dúvida, mas como sou um Agente de Saúde Virtual baseado em um guia específico, não tenho essa informação. Por favor, caso tenha dúvidas adicionais ou sintomas, procure o serviço de hemodiálise ou os profissionais de saúde que te acompanham."
 
-            Seu fluxo de interação inicial deve seguir exatamente os seguintes passos:
+            Seu fluxo de interação inicial deve seguir exatamente os seguintes passos: 
             Primeiro, quando a pessoa enviar "Oi" ou qualquer tipo de saudação, você deve responder exatamente com: "Olá, sou um robô virtual com a finalidade de oferecer orientações às pessoas em hemodiálise sobre cuidados diários e bem-estar, então vamos lá! Como você prefere ser chamado?".
             Segundo, após a pessoa digitar o nome, você deve utilizar o nome dela na mensagem e enviar exatamente: "[Nome da pessoa], você tem a opção de colocar a tela em modo cheio/grande, digitar ou falar sua pergunta e ouvir suas respostas. Vamos começar, coloque abaixo sua dúvida.".
 
@@ -1596,29 +1597,36 @@
                 const response = await fetch(URL, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "X-goog-api-key": API_KEY // Chave da API no cabeçalho, como no curl
                     },
                     body: JSON.stringify({
                         contents: [{
                             parts: [{
-                                text: `Instruções de comportamento: ${systemPrompt}\n\nPergunta do usuário: ${pergunta}`
+                                text: `Contexto: ${systemPrompt}\n\nPergunta do usuário: ${pergunta}`
                             }]
                         }]
                     })
                 });
 
                 const data = await response.json();
+                
+                // Log para te ajudar a depurar no F12 se algo der errado
+                console.log("Resposta da API:", data);
 
                 // Verifica se a resposta do Gemini chegou corretamente
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     return data.candidates[0].content.parts[0].text;
                 } else {
                     console.error("Erro na resposta da API:", data);
-                    return "Ops, tive um problema ao processar sua resposta. Tente novamente.";
+                    if (data.error) {
+                        return "Erro na API: " + data.error.message;
+                    }
+                    return "Ops, o Gemini não conseguiu gerar uma resposta. Verifique o console.";
                 }
             } catch (error) {
                 console.error("Erro na requisição:", error);
-                return "Desculpe, estou com dificuldades de conexão agora.";
+                return "Ops, tive um problema de conexão. Tente novamente.";
             }
         }
 
@@ -1671,28 +1679,31 @@
                 return;
             }
 
-            try {
-                // A IA agora lê a pergunta e devolve o texto final da resposta
-                const respostaIA = await classificarComIA(message);
-                
-                typingIndicator.style.display = "none";
-                
-                // Converte quebras de linha e negritos da IA para o HTML do chat
-                let textoFormatado = respostaIA.replace(/\n/g, '<br>');
-                textoFormatado = textoFormatado.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                
-                // Exibe a resposta final diretamente para o utilizador
-                appendMessageToUI('bot', textoFormatado);
+            // Adiciona um delay de 5 segundos antes de chamar a API, mostrando o indicador de "digitando"
+            setTimeout(async () => {
+                try {
+                    // A IA agora lê a pergunta e devolve o texto final da resposta
+                    const respostaIA = await classificarComIA(message);
+                    
+                    typingIndicator.style.display = "none";
+                    
+                    // Converte quebras de linha e negritos da IA para o HTML do chat
+                    let textoFormatado = respostaIA.replace(/\n/g, '<br>');
+                    textoFormatado = textoFormatado.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    
+                    // Exibe a resposta final diretamente para o utilizador
+                    appendMessageToUI('bot', textoFormatado);
 
-            } catch (error) {
-                console.error("Erro na comunicação com a IA:", error);
-                typingIndicator.style.display = "none";
-                appendMessageToUI('bot', "Desculpe, ocorreu um erro de comunicação. Tente novamente em instantes.");
-            }
+                } catch (error) {
+                    console.error("Erro na comunicação com a IA:", error);
+                    typingIndicator.style.display = "none";
+                    appendMessageToUI('bot', "Desculpe, ocorreu um erro de comunicação. Tente novamente em instantes.");
+                }
 
-            chatInput.disabled = false;
-            sendBtn.disabled = false;
-            chatInput.focus();
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
+            }, 5000); // 5000 milissegundos = 5 segundos
         }
 
         // ==========================================
@@ -1722,4 +1733,3 @@
     </script>
 </body>
 </html>
-
