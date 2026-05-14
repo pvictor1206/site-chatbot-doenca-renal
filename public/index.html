@@ -600,9 +600,9 @@
                 <strong>Como eu funciono:</strong><br>
                 Sou uma assistente virtual guiada por tópicos. Minhas respostas são programadas baseadas em protocolos de saúde. Para melhor interação, utilize os botões de opções ou digite palavras-chave simples (ex: "peso", "dieta").
             </p>
-            <div class="action-buttons">
+             <div class="action-buttons">
                 <button class="btn btn-primary" onclick="openChat()"><i class="fa-solid fa-robot"></i> Conversar pelo Site</button>
-                <a href="https://wa.me/5500000000000" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                <!--<a href="https://wa.me/5500000000000" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>-->
             </div>
         </div>
     </section>
@@ -760,17 +760,20 @@
         // ==========================================
         window.showTopicsInChat = function() {
             const topics = [
-                { label: "Doença Renal Crônica", query: "O que é a Doença Renal Crônica?" },
-                { label: "Hemodiálise", query: "Fale-me sobre Hemodiálise" },
-                { label: "Alimentação", query: "Como deve ser a alimentação na hemodiálise?" },
-                { label: "Cateter de Hemodiálise", query: "Quais os cuidados com o Cateter de Hemodiálise?" },
-                { label: "Fístula Arteriovenosa", query: "O que é e como cuidar da Fístula Arteriovenosa?" },
-                { label: "Líquidos", query: "Dicas sobre o consumo de líquidos" },
-                { label: "Peso", query: "Qual a importância do controle de peso?" },
-                { label: "Medicações", query: "Dúvidas sobre medicações" },
-                { label: "Fatores de Risco", query: "Quais são os Fatores de Risco para doença renal?" },
-                { label: "Acompanhamento Profissional", query: "Preciso de acompanhamento de outros profissionais?" },
-                { label: "Adesão ao Tratamento", query: "Como faço para seguir o tratamento?" }
+                { label: "Doença Renal Crônica", query: "O que é a Doença Renal Crônica?" }, // 1
+                { label: "Fatores de Risco", query: "Quais são os Fatores de Risco para doença renal?" }, // 2
+                { label: "Hemodiálise", query: "Fale-me sobre Hemodiálise" }, // 3
+                { label: "Adesão ao Tratamento", query: "Como faço para seguir o tratamento?" }, // 4
+                { label: "Cuidados Pós-Hemodiálise", query: "Quais os cuidados após a sessão de hemodiálise?" }, // 5 (Novo)
+                { label: "Estilo de Vida", query: "Como deve ser o estilo de vida/ou dia a dia da pessoa que realiza hemodiálise?" }, // 6 (Novo)
+                { label: "Alimentação", query: "Como deve ser a alimentação na hemodiálise?" }, // 7
+                { label: "Líquidos", query: "Dicas sobre o consumo de líquidos" }, // 8
+                { label: "Peso", query: "Qual a importância do controle de peso?" }, // 9
+                { label: "Cálculo de Peso", query: "Como faço o cálculo do meu peso seco recomendado?" }, // 10
+                { label: "Medicações", query: "Dúvidas sobre medicações" }, // 11
+                { label: "Cateter de Hemodiálise", query: "Quais os cuidados com o Cateter de Hemodiálise?" }, // 12
+                { label: "Fístula Arteriovenosa", query: "O que é e como cuidar da Fístula Arteriovenosa?" }, // 13 (Mantido)
+                { label: "Acompanhamento Multiprofissional", query: "Preciso de acompanhamento de outros profissionais?" } // 14
             ];
 
             let html = '<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">';
