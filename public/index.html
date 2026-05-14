@@ -1056,12 +1056,11 @@
         // ==========================================
 
         async function classificarComIA(pergunta) {
-            // 1. COLOQUE SUA CHAVE DO GEMINI AQUI
-            // 1. SUA CHAVE DO GEMINI
-            const API_KEY = "AIzaSyAuf5hZeG4WuC66DSOFAZryfi5B-VgcWYY";
-            // Alterado para v1beta e gemini-flash-latest conforme o curl
-            const URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
+            // URL da sua Cloud Function. Substitua pela URL real após o deploy.
+            const FUNCTION_URL = "https://southamerica-east1-chat-doenca-renal.cloudfunctions.net/chat";
 
+            // A API_KEY não é mais necessária no frontend, pois será usada no backend (Firebase Function)
+            
             // O Prompt de Sistema (Contexto) que você já definiu
             const systemPrompt = `
             
@@ -1597,35 +1596,27 @@
             `;
 
             try {
-                const response = await fetch(URL, {
+                const response = await fetch(FUNCTION_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-goog-api-key": API_KEY // Chave da API no cabeçalho, como no curl
                     },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `Contexto: ${systemPrompt}\n\nPergunta do usuário: ${pergunta}`
-                            }]
-                        }]
+                        pergunta: pergunta,
+                        systemPrompt: systemPrompt
                     })
                 });
 
                 const data = await response.json();
                 
-                // Log para te ajudar a depurar no F12 se algo der errado
                 console.log("Resposta da API:", data);
 
                 // Verifica se a resposta do Gemini chegou corretamente
-                if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    return data.candidates[0].content.parts[0].text;
+                if (response.ok) {
+                    return data.resposta;
                 } else {
-                    console.error("Erro na resposta da API:", data);
-                    if (data.error) {
-                        return "Erro na API: " + data.error.message;
-                    }
-                    return "Ops, o Gemini não conseguiu gerar uma resposta. Verifique o console.";
+                    console.error("Erro ao chamar a Cloud Function:", data);
+                    return "Desculpe, ocorreu um erro de comunicação com o servidor. Tente novamente.";
                 }
             } catch (error) {
                 console.error("Erro na requisição:", error);
