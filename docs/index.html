@@ -857,6 +857,7 @@
             - LÍQUIDOS: Limite = 500ml + volume urinado 24h. Dicas sede: gelo, bochechos.
             - FÍSTULA (FAV): Maturação 4-12 semanas. Vibrar (frêmito) diário, não apertar, higienizar.
             - CATETER (CVC): Curativo seco, não trocar sozinho, vigiar infecção.
+            - MEDICAÇÕES: Seguir prescrição. Não interromper sem orientação. Evitar automedicação.
             - PESO SECO: Ideal pós-sessão. Ganho máx = (Peso Seco x 3) / 100.
             - DRC: Perda de função > 3 meses. Risco: Diabetes, Pressão Alta.
             - HEMODIÁLISE: Filtra sangue, 3-4h, 3x/semana.
@@ -875,6 +876,59 @@
             } catch (error) {
                 console.error('Erro na requisição via Supabase:', error);
                 return 'Desculpe, tive um problema de conexão. Tente novamente.';
+            }
+        }
+
+        // ==========================================
+        // FLUXO GUIADO: CÁLCULO DO GANHO DE PESO ENTRE SESSÕES
+        // ==========================================
+
+        function removeAccents(text) {
+            return text
+                .replace(/[áàâã]/g, 'a')
+                .replace(/[éê]/g, 'e')
+                .replace(/[íî]/g, 'i')
+                .replace(/[óôõ]/g, 'o')
+                .replace(/[úû]/g, 'u')
+                .replace(/ç/g, 'c');
+        }
+
+        function isPesoCalculoQuery(text) {
+            const t = removeAccents(text.toLowerCase());
+            return (
+                (t.includes('peso') && t.includes('calcul')) ||
+                t.includes('peso seco') ||
+                (t.includes('peso') && t.includes('ganh') && t.includes('sess'))
+            );
+        }
+
+        function parsePesoSeco(text) {
+            const match = text.replace(',', '.').match(/(\d+(\.\d+)?)/);
+            if (!match) return null;
+            const val = parseFloat(match[1]);
+            if (isNaN(val) || val <= 0 || val > 300) return null;
+            return val;
+        }
+
+        async function calcularPesoComIA(pesoSeco) {
+            const ganho = Math.round(((pesoSeco * 3) / 100) * 100) / 100;
+            const systemPrompt = `Você é Camila, agente de saúde virtual para pacientes em hemodiálise. Responda de forma acolhedora e objetiva, em português, usando EXATAMENTE os números fornecidos, sem inventar ou alterar valores.`;
+            const question = `O paciente informou que o peso seco dele é ${pesoSeco} Kg.
+Explique, passo a passo, o cálculo do ganho de peso máximo permitido entre as sessões de hemodiálise, seguindo esta regra: Peso seco x 3, depois dividir o resultado por 100.
+Use estes números reais (já calculados, não recalcule nem altere):
+${pesoSeco} x 3 = ${pesoSeco * 3}
+${pesoSeco * 3} / 100 = ${ganho}
+Finalize informando claramente que a pessoa pode ganhar no máximo ${ganho} Kg entre as sessões de hemodiálise.`;
+
+            try {
+                const { data, error } = await supabase.functions.invoke('chat-groq', {
+                    body: { question, systemPrompt }
+                });
+                if (error) throw error;
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error('Erro na requisição via Supabase:', error);
+                return `Com base no seu peso seco de ${pesoSeco} Kg, o cálculo é:\n${pesoSeco} x 3 = ${pesoSeco * 3}\n${pesoSeco * 3} / 100 = ${ganho}\n\nVocê pode ganhar no máximo ${ganho} Kg entre as sessões de hemodiálise.`;
             }
         }
 
@@ -902,6 +956,53 @@
                     sendBtn.disabled = false;
                     chatInput.focus();
                 }, 1000);
+                return;
+            }
+
+            // Dispara (ou reinicia) o fluxo guiado de cálculo do peso,
+            // seja pelo botão "Cálculo de Peso" ou por pergunta em texto livre.
+            if (isPesoCalculoQuery(message)) {
+                chatState = 'WAITING_PESO_SECO';
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    appendMessageToUI('bot', 'Para calcular o quanto você pode ganhar de peso entre as sessões de hemodiálise, preciso de uma informação:<br><br>Qual é o seu <strong>peso seco</strong> (o peso ideal, definido pela equipe de saúde, que você deve atingir após a sessão)? Responda apenas com o número, em Kg (exemplo: 55).');
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    chatInput.focus();
+                }, 1000);
+                return;
+            }
+
+            if (chatState === 'WAITING_PESO_SECO') {
+                const pesoSeco = parsePesoSeco(message);
+
+                if (pesoSeco === null) {
+                    setTimeout(() => {
+                        typingIndicator.style.display = 'none';
+                        appendMessageToUI('bot', 'Não consegui entender esse valor. Por favor, digite apenas o número do seu peso seco em Kg (exemplo: 55 ou 55,5).');
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 1000);
+                    return;
+                }
+
+                chatState = 'CHAT';
+                setTimeout(async () => {
+                    try {
+                        const respostaIA = await calcularPesoComIA(pesoSeco);
+                        typingIndicator.style.display = 'none';
+                        let textoFormatado = respostaIA.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        appendMessageToUI('bot', textoFormatado);
+                    } catch (error) {
+                        console.error('Erro:', error);
+                        typingIndicator.style.display = 'none';
+                        appendMessageToUI('bot', 'Erro de comunicação. Tente novamente.');
+                    }
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    chatInput.focus();
+                }, 2000);
                 return;
             }
 
