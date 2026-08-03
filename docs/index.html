@@ -708,7 +708,7 @@
             <!-- Mensagem Inicial -->
             <div class="message-wrapper bot">
                 <div class="message bot-message">
-                    Olá, sou um robô virtual com a finalidade de oferecer orientações às pessoas em hemodiálise sobre cuidados diários e bem-estar, então vamos lá!<br><br>Como você prefere ser chamado?
+                    Olá, sou um robô virtual com a finalidade de oferecer orientações às pessoas em hemodiálise sobre cuidados diários e bem-estar, então vamos lá!
                 </div>
             </div>
             
@@ -918,14 +918,21 @@
             const unique = [...new Set(urls)];
             const items = unique.map(url => {
                 const id = getYoutubeId(url);
-                return `<a href="${url}" target="_blank" rel="noopener" style="position:relative;display:block;border-radius:8px;overflow:hidden;text-decoration:none;">
+                return `<div class="video-thumb" data-video-id="${id}" onclick="playInlineVideo(this)" style="position:relative;display:block;border-radius:8px;overflow:hidden;cursor:pointer;">
                     <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="Vídeo relacionado" style="width:100%;display:block;">
                     <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:rgba(0,0,0,0.6);border-radius:50%;display:flex;align-items:center;justify-content:center;">
                         <i class="fa-solid fa-play" style="color:white;font-size:16px;margin-left:3px;"></i>
                     </span>
-                </a>`;
+                </div>`;
             }).join('');
             return `<div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">${items}</div>`;
+        }
+
+        function playInlineVideo(el) {
+            const id = el.getAttribute('data-video-id');
+            el.outerHTML = `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">
+                <iframe src="https://www.youtube.com/embed/${id}?autoplay=1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>`;
         }
 
         function getRelatedVideos(text) {
