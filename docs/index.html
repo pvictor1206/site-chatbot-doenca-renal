@@ -894,6 +894,63 @@
                 .replace(/ç/g, 'c');
         }
 
+        // ==========================================
+        // VÍDEOS RELACIONADOS POR ASSUNTO
+        // ==========================================
+        const topicVideos = {
+            ALIMENTACAO: 'https://youtu.be/tiASHRuCJls',
+            FISTULA_CUIDADOS: 'https://youtu.be/ElQy6w9OTE4',
+            FISTULA_OQUEE: 'https://youtu.be/XM5sCXTrIik',
+            LIQUIDOS: 'https://youtu.be/-79LGgPbkU8',
+            PESO: 'https://youtu.be/--Zu7zX7N8E',
+            MEDICACOES: 'https://youtu.be/LMC7cjPIXSA',
+            ESTILO_DE_VIDA: 'https://youtu.be/GLOPWxBZ7TM',
+            COMPROMISSO_TRATAMENTO: 'https://youtu.be/p-mXfadnpZI',
+            ACOMPANHAMENTO: 'https://youtu.be/h-Dzl6IJ4DA'
+        };
+
+        function getYoutubeId(url) {
+            const match = url.match(/youtu\.be\/([^?&]+)/);
+            return match ? match[1] : null;
+        }
+
+        function buildVideoLinksHtml(urls) {
+            const unique = [...new Set(urls)];
+            const items = unique.map(url => {
+                const id = getYoutubeId(url);
+                return `<a href="${url}" target="_blank" rel="noopener" style="position:relative;display:block;border-radius:8px;overflow:hidden;text-decoration:none;">
+                    <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="Vídeo relacionado" style="width:100%;display:block;">
+                    <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:rgba(0,0,0,0.6);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                        <i class="fa-solid fa-play" style="color:white;font-size:16px;margin-left:3px;"></i>
+                    </span>
+                </a>`;
+            }).join('');
+            return `<div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">${items}</div>`;
+        }
+
+        function getRelatedVideos(text) {
+            const t = removeAccents(text.toLowerCase());
+            const videos = [];
+
+            if (t.includes('fistula')) {
+                const cuidado = t.includes('cuidad') || t.includes('cuidar');
+                const oque = t.includes('o que e');
+                if (cuidado && !oque) videos.push(topicVideos.FISTULA_CUIDADOS);
+                else if (oque && !cuidado) videos.push(topicVideos.FISTULA_OQUEE);
+                else { videos.push(topicVideos.FISTULA_OQUEE); videos.push(topicVideos.FISTULA_CUIDADOS); }
+            }
+
+            if (t.includes('aliment') || t.includes('dieta')) videos.push(topicVideos.ALIMENTACAO);
+            if (t.includes('liquid')) videos.push(topicVideos.LIQUIDOS);
+            if (t.includes('peso') && !t.includes('fistula')) videos.push(topicVideos.PESO);
+            if (t.includes('medicac') || t.includes('medicament') || t.includes('remedio')) videos.push(topicVideos.MEDICACOES);
+            if (t.includes('estilo de vida') || t.includes('dia a dia')) videos.push(topicVideos.ESTILO_DE_VIDA);
+            if (t.includes('tratamento') || t.includes('adesao') || t.includes('compromisso')) videos.push(topicVideos.COMPROMISSO_TRATAMENTO);
+            if (t.includes('acompanhamento')) videos.push(topicVideos.ACOMPANHAMENTO);
+
+            return [...new Set(videos)];
+        }
+
         function isPesoCalculoQuery(text) {
             const t = removeAccents(text.toLowerCase());
             return (
@@ -994,6 +1051,7 @@ Finalize informando claramente que a pessoa pode ganhar no máximo ${ganho} Kg e
                         const respostaIA = await calcularPesoComIA(pesoSeco);
                         typingIndicator.style.display = 'none';
                         let textoFormatado = respostaIA.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        textoFormatado += buildVideoLinksHtml([topicVideos.PESO]);
                         appendMessageToUI('bot', textoFormatado);
                     } catch (error) {
                         console.error('Erro:', error);
@@ -1012,6 +1070,8 @@ Finalize informando claramente que a pessoa pode ganhar no máximo ${ganho} Kg e
                     const respostaIA = await classificarComIA(message);
                     typingIndicator.style.display = 'none';
                     let textoFormatado = respostaIA.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    const videosRelacionados = getRelatedVideos(message);
+                    if (videosRelacionados.length) textoFormatado += buildVideoLinksHtml(videosRelacionados);
                     appendMessageToUI('bot', textoFormatado);
                 } catch (error) {
                     console.error('Erro:', error);
