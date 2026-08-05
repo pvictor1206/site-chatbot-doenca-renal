@@ -935,6 +935,77 @@
             </div>`;
         }
 
+        // ==========================================
+        // IMAGENS RELACIONADAS POR ASSUNTO
+        // ==========================================
+        const topicImages = {
+            ALIMENTACAO: { src: 'images_para_chat/image2.png', alt: 'Pirâmide alimentar com os grupos de alimentos e porções recomendadas' },
+            CARAMBOLA: { src: 'images_para_chat/image34.png', alt: 'Carambola: fruta proibida para quem faz hemodiálise' },
+            ABACATE: { src: 'images_para_chat/image27.png', alt: 'Abacate: fruta rica em potássio, consumir com cuidado' },
+            BANANA: { src: 'images_para_chat/image14.png', alt: 'Banana: fruta rica em potássio, consumir com cuidado' },
+            FOSFORO: { src: 'images_para_chat/image50.png', alt: 'Frios e embutidos: alimentos ricos em fósforo, evitar' },
+            LIQUIDOS: { src: 'images_para_chat/image48.png', alt: 'Jarra de suco, lembrete do controle de líquidos' },
+            SEDE_DICA: { src: 'images_para_chat/image53.png', alt: 'Dica para aliviar a sede: respirar pelo nariz' },
+            FISTULA_OQUEE: { src: 'images_para_chat/image32.png', alt: 'Braço com curativo no local da fístula arteriovenosa' },
+            FISTULA_CUIDADOS: { src: 'images_para_chat/image13.png', alt: 'Higienização do braço da fístula na pia' },
+            PESO: { src: 'images_para_chat/image41.png', alt: 'Paciente sendo pesado na balança' },
+            MEDICACOES: { src: 'images_para_chat/image15.png', alt: 'Tabela de horários dos medicamentos' },
+            MEDICACOES_HORARIO: { src: 'images_para_chat/image31.png', alt: 'Lembrete para tomar o medicamento no horário certo' },
+            ESTILO_DE_VIDA: { src: 'images_para_chat/image49.png', alt: 'Pessoa praticando corrida leve' },
+            TABAGISMO: { src: 'images_para_chat/image20.png', alt: 'Mão recusando cigarros' },
+            COMPROMISSO_TRATAMENTO: { src: 'images_para_chat/image7.png', alt: 'Família unida apoiando o tratamento' },
+            ACOMPANHAMENTO: { src: 'images_para_chat/image38.png', alt: 'Profissional de saúde aferindo a pressão arterial do paciente' },
+            HEMODIALISE: { src: 'images_para_chat/image4.png', alt: 'Paciente em sessão de hemodiálise' },
+            ALERTA: { src: 'images_para_chat/image3.png', alt: 'Alerta de atenção aos sinais de emergência' }
+        };
+
+        function buildImageHtml(images) {
+            if (!images || !images.length) return '';
+            const items = images.map(img => `<img src="${img.src}" alt="${img.alt}" title="${img.alt}" style="width:100%;border-radius:8px;display:block;">`).join('');
+            return `<div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">${items}</div>`;
+        }
+
+        // Seleção deliberadamente conservadora: no máximo 2 imagens por resposta,
+        // só quando a palavra-chave é específica o suficiente para não ilustrar o assunto errado.
+        function getRelatedImages(text) {
+            const t = removeAccents(text.toLowerCase());
+            const images = [];
+
+            if (t.includes('carambola')) images.push(topicImages.CARAMBOLA);
+            else if (t.includes('abacate')) images.push(topicImages.ABACATE);
+            else if (t.includes('banana')) images.push(topicImages.BANANA);
+            else if (t.includes('fosforo') || t.includes('embutido') || t.includes('frios')) images.push(topicImages.FOSFORO);
+            else if (t.includes('aliment') || t.includes('dieta')) images.push(topicImages.ALIMENTACAO);
+
+            if (t.includes('sede')) images.push(topicImages.SEDE_DICA);
+            else if (t.includes('liquid')) images.push(topicImages.LIQUIDOS);
+
+            if (t.includes('fistula')) {
+                const cuidado = t.includes('cuidad') || t.includes('cuidar');
+                const oque = t.includes('o que e');
+                if (cuidado && !oque) images.push(topicImages.FISTULA_CUIDADOS);
+                else if (oque && !cuidado) images.push(topicImages.FISTULA_OQUEE);
+                else images.push(topicImages.FISTULA_OQUEE);
+            }
+
+            if (t.includes('peso') && !t.includes('fistula')) images.push(topicImages.PESO);
+
+            if (t.includes('medicac') || t.includes('medicament') || t.includes('remedio')) {
+                images.push((t.includes('horario') || t.includes('hora')) ? topicImages.MEDICACOES_HORARIO : topicImages.MEDICACOES);
+            }
+
+            if (t.includes('fumar') || t.includes('cigarro') || t.includes('tabaco')) images.push(topicImages.TABAGISMO);
+            else if (t.includes('estilo de vida') || t.includes('dia a dia') || t.includes('exercicio')) images.push(topicImages.ESTILO_DE_VIDA);
+
+            if (t.includes('tratamento') || t.includes('adesao') || t.includes('compromisso')) images.push(topicImages.COMPROMISSO_TRATAMENTO);
+            if (t.includes('acompanhamento')) images.push(topicImages.ACOMPANHAMENTO);
+            if (t.includes('hemodialise') || t.includes('dialise')) images.push(topicImages.HEMODIALISE);
+            if (t.includes('sina') || t.includes('sintoma') || t.includes('emergencia') || t.includes('urgente')) images.push(topicImages.ALERTA);
+
+            const unique = [...new Map(images.map(img => [img.src, img])).values()];
+            return unique.slice(0, 2);
+        }
+
         function getRelatedVideos(text) {
             const t = removeAccents(text.toLowerCase());
             const videos = [];
@@ -1059,6 +1130,7 @@ Finalize informando claramente que a pessoa pode ganhar no máximo ${ganho} Kg e
                         typingIndicator.style.display = 'none';
                         let textoFormatado = respostaIA.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                         textoFormatado += buildVideoLinksHtml([topicVideos.PESO]);
+                        textoFormatado += buildImageHtml([topicImages.PESO]);
                         appendMessageToUI('bot', textoFormatado);
                     } catch (error) {
                         console.error('Erro:', error);
@@ -1079,6 +1151,8 @@ Finalize informando claramente que a pessoa pode ganhar no máximo ${ganho} Kg e
                     let textoFormatado = respostaIA.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                     const videosRelacionados = getRelatedVideos(message);
                     if (videosRelacionados.length) textoFormatado += buildVideoLinksHtml(videosRelacionados);
+                    const imagensRelacionadas = getRelatedImages(message);
+                    if (imagensRelacionadas.length) textoFormatado += buildImageHtml(imagensRelacionadas);
                     appendMessageToUI('bot', textoFormatado);
                 } catch (error) {
                     console.error('Erro:', error);
