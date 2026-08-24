@@ -362,6 +362,24 @@
             z-index: 9999; /* Garante que cubra a tela toda e fique por cima de tudo */
         }
 
+        /* Em telas largas, o fundo do chat cobre a tela toda, mas o conteúdo
+           (mensagens, ações rápidas e campo de digitação) fica centralizado
+           numa coluna de leitura confortável, em vez de esticar de ponta a ponta. */
+        #chat-window.chat-expanded .chat-body {
+            padding-left: max(20px, calc((100% - 760px) / 2));
+            padding-right: max(20px, calc((100% - 760px) / 2));
+        }
+
+        #chat-window.chat-expanded .chat-quick-actions,
+        #chat-window.chat-expanded .chat-footer {
+            padding-left: max(15px, calc((100% - 760px) / 2));
+            padding-right: max(15px, calc((100% - 760px) / 2));
+        }
+
+        #chat-window.chat-expanded .message {
+            max-width: 640px;
+        }
+
         .message-wrapper { display: flex; width: 100%; }
         .message-wrapper.user { justify-content: flex-end; }
         
@@ -871,7 +889,12 @@
                 });
 
                 if (error) throw error;
-                
+
+                if (!data || !data.choices || !data.choices[0]) {
+                    console.error('Resposta inesperada da Edge Function chat-groq:', data);
+                    throw new Error(data?.error?.message || data?.error || 'Resposta inválida da IA');
+                }
+
                 return data.choices[0].message.content;
 
             } catch (error) {
@@ -1061,6 +1084,12 @@ Finalize informando claramente que a pessoa pode ganhar no máximo ${ganho} Kg e
                     body: { question, systemPrompt }
                 });
                 if (error) throw error;
+
+                if (!data || !data.choices || !data.choices[0]) {
+                    console.error('Resposta inesperada da Edge Function chat-groq:', data);
+                    throw new Error(data?.error?.message || data?.error || 'Resposta inválida da IA');
+                }
+
                 return data.choices[0].message.content;
             } catch (error) {
                 console.error('Erro na requisição via Supabase:', error);
