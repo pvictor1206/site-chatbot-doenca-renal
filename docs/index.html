@@ -475,11 +475,11 @@
             color: var(--primary-dark);
             padding: 6px 12px;
             border-radius: 15px;
-            font-size: 12px;
+            font-size: calc(var(--chat-fs) - 2px);
             cursor: pointer;
             white-space: nowrap;
             font-weight: bold;
-            transition: all 0.2s;
+            transition: font-size 0.2s ease, all 0.2s;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -499,8 +499,8 @@
             border-radius: 8px;
             cursor: pointer;
             text-align: left;
-            font-size: 13px;
-            transition: 0.2s;
+            font-size: calc(var(--chat-fs) - 1px);
+            transition: font-size 0.2s ease, background-color 0.2s, color 0.2s;
             width: 100%;
             font-family: inherit;
         }
